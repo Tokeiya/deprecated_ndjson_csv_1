@@ -24,8 +24,8 @@ if ($m)
     Write-Host ("Module :{0}" -f $m)
 }
 
-
-$env:RUSTFLAGS = "-C instrument-coverage"
+$env:CARGO_INCREMENTAL=0
+$env:RUSTFLAGS="-Zprofile -Ccodegen-units=1 -Copt-level=0 -Clink-dead-code -Coverflow-checks=off -Zpanic_abort_tests -Cpanic=abort"
 $env:LLVM_PROFILE_FILE = "../coverage_prof/traq-bot-http-rs-%p-%m.profraw"
 
 

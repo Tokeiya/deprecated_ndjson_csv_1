@@ -1,27 +1,26 @@
-use std::num::{ParseFloatError, ParseIntError};
 use super::text_presentation::TextPresentation;
 use combine as cmb;
 use combine::parser::char as chr;
 use combine::{Parser, Stream};
+use std::num::{ParseFloatError, ParseIntError};
 
+use super::with_raw_value::WithRawValue;
 use crate::number::Number;
 use crate::parse_number_error::ParseNumberError;
-use super::with_raw_value::WithRawValue;
 
-
-fn zero<I: Stream<Token=char>>() -> impl Parser<I, Output=TextPresentation> {
+fn zero<I: Stream<Token = char>>() -> impl Parser<I, Output = TextPresentation> {
 	chr::char('0').map(TextPresentation::from)
 }
 
-fn plus<I: Stream<Token=char>>() -> impl Parser<I, Output=TextPresentation> {
+fn plus<I: Stream<Token = char>>() -> impl Parser<I, Output = TextPresentation> {
 	chr::char('+').map(TextPresentation::from)
 }
 
-fn minus<I: Stream<Token=char>>() -> impl Parser<I, Output=TextPresentation> {
+fn minus<I: Stream<Token = char>>() -> impl Parser<I, Output = TextPresentation> {
 	chr::char('-').map(TextPresentation::from)
 }
 
-fn integer<I: Stream<Token=char>>() -> impl Parser<I, Output=TextPresentation> {
+fn integer<I: Stream<Token = char>>() -> impl Parser<I, Output = TextPresentation> {
 	let tmp = (
 		digit1_9(),
 		cmb::many::<String, I, _>(chr::digit()).map(TextPresentation::from),
@@ -35,7 +34,7 @@ fn integer<I: Stream<Token=char>>() -> impl Parser<I, Output=TextPresentation> {
 	zero().or(tmp)
 }
 
-fn frac<I: Stream<Token=char>>() -> impl Parser<I, Output=TextPresentation> {
+fn frac<I: Stream<Token = char>>() -> impl Parser<I, Output = TextPresentation> {
 	(
 		chr::char::<I>('.'),
 		cmb::many1::<String, I, _>(chr::digit()),
@@ -47,9 +46,10 @@ fn frac<I: Stream<Token=char>>() -> impl Parser<I, Output=TextPresentation> {
 		})
 }
 
-fn exponent<I: Stream<Token=char>>() -> impl Parser<I, Output=TextPresentation> {
+fn exponent<I: Stream<Token = char>>() -> impl Parser<I, Output = TextPresentation> {
 	let e_sign = chr::char::<I>('e').or(chr::char::<I>('E'));
-	let opt_sign = cmb::optional(plus::<I>().or(minus::<I>())).map(|c| c.unwrap_or_else(|| TextPresentation::Empty));
+	let opt_sign = cmb::optional(plus::<I>().or(minus::<I>()))
+		.map(|c| c.unwrap_or_else(|| TextPresentation::Empty));
 	let digits = cmb::many1::<String, I, _>(chr::digit::<I>());
 
 	(e_sign, opt_sign, digits).map(|(s, o, d)| {
@@ -61,7 +61,7 @@ fn exponent<I: Stream<Token=char>>() -> impl Parser<I, Output=TextPresentation> 
 	})
 }
 
-fn digit1_9<I: Stream<Token=char>>() -> impl Parser<I, Output=TextPresentation> {
+fn digit1_9<I: Stream<Token = char>>() -> impl Parser<I, Output = TextPresentation> {
 	cmb::satisfy(|c| match c {
 		'1' => true,
 		'2' => true,
@@ -74,10 +74,10 @@ fn digit1_9<I: Stream<Token=char>>() -> impl Parser<I, Output=TextPresentation> 
 		'9' => true,
 		_ => false,
 	})
-		.map(TextPresentation::from)
+	.map(TextPresentation::from)
 }
 
-fn number_str<I: Stream<Token=char>>() -> impl Parser<I, Output=(TextPresentation, bool)> {
+fn number_str<I: Stream<Token = char>>() -> impl Parser<I, Output = (TextPresentation, bool)> {
 	let opt_minus = cmb::optional(minus()).map(|c| c.unwrap_or_else(|| TextPresentation::Empty));
 	let opt_frac = cmb::optional(frac()).map(|c| c.unwrap_or_else(|| TextPresentation::Empty));
 	let opt_exp = cmb::optional(exponent()).map(|c| c.unwrap_or_else(|| TextPresentation::Empty));
@@ -88,67 +88,85 @@ fn number_str<I: Stream<Token=char>>() -> impl Parser<I, Output=(TextPresentatio
 		f.write_to_buffer(&mut buff);
 		e.write_to_buffer(&mut buff);
 
-		(TextPresentation::from(buff), matches!(f,TextPresentation::Empty) && matches!(e,TextPresentation::Empty))
+		(
+			TextPresentation::from(buff),
+			matches!(f, TextPresentation::Empty) && matches!(e, TextPresentation::Empty),
+		)
 	})
 }
 
-pub fn number<I: Stream<Token=char>>() -> impl Parser<I, Output=WithRawValue<Result<Number, ParseNumberError>>> {
+pub fn number<I: Stream<Token = char>>(
+) -> impl Parser<I, Output = WithRawValue<Result<Number, ParseNumberError>>> {
 	number_str().map(|(txt, flg)| {
-		let TextPresentation::Text(t) = txt else { unreachable!() };
+		let TextPresentation::Text(t) = txt else {
+			unreachable!()
+		};
 		let t = t.as_str();
 
 		if flg {
 			match t.parse::<i128>() {
 				Ok(i) => WithRawValue::new(t, Ok(Number::from(i))),
-				Err(e) => WithRawValue::new(t, Err(ParseNumberError::Integer(e)))
+				Err(e) => WithRawValue::new(t, Err(ParseNumberError::Integer(e))),
 			}
 		} else {
 			match t.parse::<f64>() {
 				Ok(f) => WithRawValue::new(t, Ok(Number::from(f))),
-				Err(e) => WithRawValue::new(t, Err(ParseNumberError::Float(e)))
+				Err(e) => WithRawValue::new(t, Err(ParseNumberError::Float(e))),
 			}
 		}
 	})
 }
-
 
 #[cfg(test)]
 mod tests {
 	use super::*;
 
 	#[should_panic]
-	fn should_panic<'a, T>(
-		mut parser: impl Parser<&'a str, Output=T>,
-		input: &'a str,
-	) {
+	fn should_panic<'a, T>(mut parser: impl Parser<&'a str, Output = T>, input: &'a str) {
 		_ = parser.parse(input)
 	}
 
 	#[test]
 	fn number() {
-		fn a_int((act, rem): (WithRawValue<Result<Number, ParseNumberError>>, &str), expected: i128, expected_raw: &str) {
+		fn a_int(
+			(act, rem): (WithRawValue<Result<Number, ParseNumberError>>, &str),
+			expected: i128,
+			expected_raw: &str,
+		) {
 			assert_eq!(rem, "");
 
-			let Ok(Number::Integer(i)) = act.value() else { unreachable!() };
+			let Ok(Number::Integer(i)) = act.value() else {
+				unreachable!()
+			};
 			assert_eq!(i, &expected);
 			assert_eq!(act.raw(), expected_raw)
 		}
 
-		fn a_flt((act, rem): (WithRawValue<Result<Number, ParseNumberError>>, &str), expected: f64, expected_raw: &str) {
+		fn a_flt(
+			(act, rem): (WithRawValue<Result<Number, ParseNumberError>>, &str),
+			expected: f64,
+			expected_raw: &str,
+		) {
 			assert_eq!(rem, "");
 
-			let Ok(Number::Float(f)) = act.value() else { unreachable!() };
+			let Ok(Number::Float(f)) = act.value() else {
+				unreachable!()
+			};
 			assert_eq!(f, &expected);
 			assert_eq!(act.raw(), expected_raw)
 		}
 
-		fn a_err(act: (WithRawValue<Result<Number, ParseNumberError>>, &str), is_int: bool, expected: &str) {
+		fn a_err(
+			act: (WithRawValue<Result<Number, ParseNumberError>>, &str),
+			is_int: bool,
+			expected: &str,
+		) {
 			assert_eq!(act.1, expected);
 
 			if is_int {
-				assert!(matches!(act.0.value(),Err(ParseNumberError::Integer(_))))
+				assert!(matches!(act.0.value(), Err(ParseNumberError::Integer(_))))
 			} else {
-				assert!(matches!(act.0.value(),Err(ParseNumberError::Float(_))))
+				assert!(matches!(act.0.value(), Err(ParseNumberError::Float(_))))
 			}
 		}
 
@@ -157,14 +175,38 @@ mod tests {
 		println!("{}", i128::MAX);
 		println!("{}", i128::MIN);
 
-		a_err(parser.parse("170141183460469231731687303715884105728").unwrap(), true, "");
-		a_err(parser.parse("-170141183460469231731687303715884105729").unwrap(), true, "");
+		a_err(
+			parser
+				.parse("170141183460469231731687303715884105728")
+				.unwrap(),
+			true,
+			"",
+		);
+		a_err(
+			parser
+				.parse("-170141183460469231731687303715884105729")
+				.unwrap(),
+			true,
+			"",
+		);
 
 		a_int(parser.parse("0").unwrap(), 0, "0");
 		a_int(parser.parse("-0").unwrap(), 0, "-0");
 
-		a_int(parser.parse("170141183460469231731687303715884105727").unwrap(), 170141183460469231731687303715884105727, "170141183460469231731687303715884105727");
-		a_int(parser.parse("-170141183460469231731687303715884105728").unwrap(), -170141183460469231731687303715884105728, "-170141183460469231731687303715884105728");
+		a_int(
+			parser
+				.parse("170141183460469231731687303715884105727")
+				.unwrap(),
+			170141183460469231731687303715884105727,
+			"170141183460469231731687303715884105727",
+		);
+		a_int(
+			parser
+				.parse("-170141183460469231731687303715884105728")
+				.unwrap(),
+			-170141183460469231731687303715884105728,
+			"-170141183460469231731687303715884105728",
+		);
 
 		a_flt(parser.parse("0.0").unwrap(), 0f64, "0.0");
 		a_flt(parser.parse("-0.0").unwrap(), 0f64, "-0.0");
@@ -175,7 +217,6 @@ mod tests {
 		a_flt(parser.parse("5e-1").unwrap(), 0.5, "5e-1");
 		a_flt(parser.parse("-5e-1").unwrap(), -0.5, "-5e-1");
 	}
-
 
 	#[test]
 	fn zero() {
@@ -362,7 +403,9 @@ mod tests {
 			unreachable!()
 		};
 		assert_eq!(rem, "");
-		assert!(matches!(act,(TextPresentation::Text(c),f) if (c.as_str(),f)==("-1234567890",true)));
+		assert!(
+			matches!(act,(TextPresentation::Text(c),f) if (c.as_str(),f)==("-1234567890",true))
+		);
 
 		let Ok((act, rem)) = parser.parse("-0") else {
 			unreachable!()

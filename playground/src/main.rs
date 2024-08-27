@@ -1,7 +1,8 @@
 mod sample;
 
 fn main() {
-	let a = "512".parse::<i8>();
+	let c = '\u{000020}';
 
-	println!("{:?}", a);
+	println!("{c}");
+	println!("{}", c == '\u{000020}')
 }
