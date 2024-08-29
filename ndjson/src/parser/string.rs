@@ -42,7 +42,6 @@ fn unicode_literal<I: Stream<Token = char>>() -> impl Parser<I, Output = WithRaw
 	(chr::char('u'), digits).map(|(_, d)| {
 		let code_point = u32::from_str_radix(&d, 16).unwrap();
 
-		//TODO:invalid care.
 		let character = char::from_u32(code_point).unwrap();
 		WithRawValue::new_from_string(format!("u{}", &d), character)
 	})
