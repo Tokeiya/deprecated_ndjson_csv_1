@@ -62,6 +62,10 @@ mod tests {
 		let s = "hello".to_string();
 		let fixture = TextPresentation::from(s);
 
+		assert!(matches!(
+			fixture,TextPresentation::Text(s) if s=="hello"
+		));
+
 		let fixture = TextPresentation::Text("".to_string());
 		println!("{fixture:?}");
 

@@ -3,9 +3,9 @@ use combine as cmb;
 use combine::parser::char as chr;
 use combine::{Parser, Stream};
 
-fn dummy<I: Stream<Token = char>, O>() -> impl Parser<I, Output = O> {
-	chr::char('a').map(|_| panic!())
-}
+// fn dummy<I: Stream<Token = char>, O>() -> impl Parser<I, Output = O> {
+// 	chr::char('a').map(|_| panic!())
+// }
 fn unescaped<I: Stream<Token = char>>() -> impl Parser<I, Output = WithRawValue<char>> {
 	cmb::satisfy::<I, _>(|c| {
 		c == '\u{000020}'
