@@ -2,7 +2,6 @@ use super::text_presentation::TextPresentation;
 use combine as cmb;
 use combine::parser::char as chr;
 use combine::{Parser, Stream};
-use std::num::{ParseFloatError, ParseIntError};
 
 use super::with_raw_value::WithRawValue;
 use crate::number::Number;
@@ -105,13 +104,13 @@ pub fn number<I: Stream<Token = char>>(
 
 		if flg {
 			match t.parse::<i128>() {
-				Ok(i) => WithRawValue::new(t, Ok(Number::from(i))),
-				Err(e) => WithRawValue::new(t, Err(ParseNumberError::Integer(e))),
+				Ok(i) => WithRawValue::new_from_str(t, Ok(Number::from(i))),
+				Err(e) => WithRawValue::new_from_str(t, Err(ParseNumberError::Integer(e))),
 			}
 		} else {
 			match t.parse::<f64>() {
-				Ok(f) => WithRawValue::new(t, Ok(Number::from(f))),
-				Err(e) => WithRawValue::new(t, Err(ParseNumberError::Float(e))),
+				Ok(f) => WithRawValue::new_from_str(t, Ok(Number::from(f))),
+				Err(e) => WithRawValue::new_from_str(t, Err(ParseNumberError::Float(e))),
 			}
 		}
 	})
