@@ -5,10 +5,18 @@ import glob
 import webbrowser
 import argparse
 from os.path import abspath
+import platform
+
 
 
 def clean_directory(path: str):
-    p: str = path + '\\'
+    env:str=platform.system()
+
+    if env=='Windows':
+        p: str = path + '\\'
+    else:
+        p: str=path+'/'
+
     for item in glob.iglob(f"{path}/**", recursive=True):
         if os.path.isfile(item) and not item.endswith(".gitkeep"):
             print(f"file:{item}")
@@ -29,7 +37,7 @@ def main(package: str, module: str):
 
     if toolchain == "nightly-x86_64-pc-windows-msvc (default)":
         os.environ["RUSTFLAGS"] = "-Cinstrument-coverage"
-    elif toolchain == "my-nightly (default)":
+    elif toolchain == "my-nightly (default)" or toolchain=="nightly-aarch64-unknown-linux-gnu (default)":
         os.environ[
             "RUSTFLAGS"] = "-Zprofile -Ccodegen-units=1 -Copt-level=0 -Clink-dead-code -Coverflow-checks=off -Zpanic_abort_tests -Cpanic=abort"
     else:

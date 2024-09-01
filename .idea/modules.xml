@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/ndjson_tsv.iml" filepath="$PROJECT_DIR$/.idea/ndjson_tsv.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/ndjson_csv.iml" filepath="$PROJECT_DIR$/.idea/ndjson_csv.iml" />
     </modules>
   </component>
 </project>
