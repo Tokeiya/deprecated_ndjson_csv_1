@@ -1,5 +1,5 @@
 pub mod boolean;
-mod null;
+pub mod null;
 pub mod number;
 pub mod string;
 pub mod text_presentation;
