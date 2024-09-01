@@ -1,4 +1,6 @@
 /target
+/.venv
+
 
 coverage_prof/*
 !/coveage_prof/.gitkeep
