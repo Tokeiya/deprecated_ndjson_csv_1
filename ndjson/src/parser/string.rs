@@ -1,11 +1,9 @@
 use super::with_raw_value::WithRawValue;
+use crate::typed_value::TypedValue;
 use combine as cmb;
 use combine::parser::char as chr;
 use combine::{Parser, Stream};
 
-// fn dummy<I: Stream<Token = char>, O>() -> impl Parser<I, Output = O> {
-// 	chr::char('a').map(|_| panic!())
-// }
 fn unescaped<I: Stream<Token = char>>() -> impl Parser<I, Output = WithRawValue<char>> {
 	cmb::satisfy::<I, _>(|c| {
 		c == '\u{000020}'
@@ -55,7 +53,7 @@ fn escape<I: Stream<Token = char>>() -> impl Parser<I, Output = WithRawValue<cha
 	})
 }
 
-pub fn string<I: Stream<Token = char>>() -> impl Parser<I, Output = WithRawValue<String>> {
+pub fn string<I: Stream<Token = char>>() -> impl Parser<I, Output = WithRawValue<TypedValue>> {
 	let tmp = unescaped::<I>().or(escape::<I>());
 
 	let tmp = cmb::many::<Vec<WithRawValue<char>>, I, _>(tmp).map(|v| {
@@ -71,7 +69,10 @@ pub fn string<I: Stream<Token = char>>() -> impl Parser<I, Output = WithRawValue
 	});
 
 	(chr::char('"'), tmp, chr::char('"')).map(|(_, v, _)| {
-		WithRawValue::new_from_string(format!(r#""{}""#, v.raw()), v.value().to_string())
+		WithRawValue::new_from_string(
+			format!(r#""{}""#, v.raw()),
+			TypedValue::from(v.value().as_str()),
+		)
 	})
 }
 
@@ -189,10 +190,14 @@ mod tests {
 			};
 			assert_eq!(rem, "");
 
-			println!("act.value():{}", act.value());
+			let TypedValue::String(s) = act.value() else {
+				unreachable!()
+			};
+
+			println!("act.value():{}", s);
 			println!("act.raw():{}", act.raw());
 
-			assert_eq!(act.value(), expected);
+			assert_eq!(s, expected);
 
 			assert_eq!(act.raw(), quoted)
 		}
