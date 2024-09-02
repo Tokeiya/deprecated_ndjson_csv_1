@@ -1,6 +1,6 @@
 use combine::{self as cmb, Parser, Stream};
 
-pub fn white_space<Input: Stream<Token=char>>() -> impl Parser<Input, Output=()> {
+pub fn white_space<Input: Stream<Token = char>>() -> impl Parser<Input, Output = ()> {
 	let tmp = cmb::satisfy(|c: char| match c {
 		' ' => true,
 		'\t' => true,
@@ -12,19 +12,17 @@ pub fn white_space<Input: Stream<Token=char>>() -> impl Parser<Input, Output=()>
 	cmb::many(tmp).map(|_: String| ())
 }
 
-pub fn trim<I: Stream<Token=char>, O>(parser: impl Parser<I, Output=O>) -> impl Parser<I, Output=O> {
-	(white_space(),
-	 parser,
-	 white_space()).map(|(_, o, _)| o)
+pub fn trim<I: Stream<Token = char>, O>(
+	parser: impl Parser<I, Output = O>,
+) -> impl Parser<I, Output = O> {
+	(white_space(), parser, white_space()).map(|(_, o, _)| o)
 }
-
 
 #[cfg(test)]
 mod tests {
 	use super::*;
 	use combine::error::StringStreamError;
 	use combine::parser::char as chr;
-
 
 	fn assert_result(actual: Result<((), &str), StringStreamError>, remain: &str) {
 		let Ok((_, rem)) = actual else { unreachable!() };
@@ -60,7 +58,9 @@ mod tests {
 		let p = chr::string::<&str>("rust");
 		let mut parser = super::trim(p);
 
-		let (act, rem) = parser.parse("           \t  \r      rust           \n    \t").unwrap();
+		let (act, rem) = parser
+			.parse("           \t  \r      rust           \n    \t")
+			.unwrap();
 
 		assert_eq!(rem, "");
 		assert_eq!(act, "rust");

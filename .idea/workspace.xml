@@ -7,16 +7,16 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="07d6fcac-9c3a-4d93-a198-0ad0d898df43" name="Changes" comment="Remove `typed_value.rs` and integrate with `value.rs`&#10;&#10;Consolidated the functionality of `typed_value.rs` into `value.rs` for better maintainability. Updated all the necessary import paths and adjusted tests to reflect the changes.">
+    <list default="true" id="07d6fcac-9c3a-4d93-a198-0ad0d898df43" name="Changes" comment="Refactor error handling in number parsing&#10;&#10;This commit simplifies the number parsing function by removing explicit error types from its return value. It directly embeds the errors within the `Value` structure, streamlining the code and tests. This change improves readability and reduces complexity in error matching.">
+      <change afterPath="$PROJECT_DIR$/ndjson/src/parser/array.rs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ndjson/src/parser/member.rs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ndjson/src/parser/object.rs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ndjson/src/parser/value.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ndjson/src/lib.rs" beforeDir="false" afterPath="$PROJECT_DIR$/ndjson/src/lib.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ndjson/src/member.rs" beforeDir="false" afterPath="$PROJECT_DIR$/ndjson/src/member.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ndjson/src/parser/boolean.rs" beforeDir="false" afterPath="$PROJECT_DIR$/ndjson/src/parser/boolean.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ndjson/src/parser/null.rs" beforeDir="false" afterPath="$PROJECT_DIR$/ndjson/src/parser/null.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ndjson/src/parser/number.rs" beforeDir="false" afterPath="$PROJECT_DIR$/ndjson/src/parser/number.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ndjson/src/parser/string.rs" beforeDir="false" afterPath="$PROJECT_DIR$/ndjson/src/parser/string.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ndjson/src/value.rs" beforeDir="false" afterPath="$PROJECT_DIR$/ndjson/src/value.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/playground/src/sample.rs" beforeDir="false" afterPath="$PROJECT_DIR$/playground/src/sample.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ndjson/src/number.rs" beforeDir="false" afterPath="$PROJECT_DIR$/ndjson/src/number.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ndjson/src/parser.rs" beforeDir="false" afterPath="$PROJECT_DIR$/ndjson/src/parser.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ndjson/src/parser/white_space.rs" beforeDir="false" afterPath="$PROJECT_DIR$/ndjson/src/parser/white_space.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,7 +63,13 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Cargo.Test member::test (1).executor": "Run",
+    "Cargo.Test member::test.executor": "Coverage",
     "Cargo.Test member::test::new_test.executor": "Run",
+    "Cargo.Test number::test.executor": "Run",
+    "Cargo.Test parser::number::tests::number.executor": "Run",
+    "Cargo.Test parser::white_space::tests::trim.executor": "Run",
+    "Cargo.Test white_space::tests.executor": "Run",
     "Python.coverage.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.rust.reset.selective.auto.import": "true",
@@ -91,7 +97,7 @@
     <option name="runOnTheFly" value="true" />
     <option name="tool" value="Clippy" />
   </component>
-  <component name="RunManager" selected="Cargo.Test member::test::new_test">
+  <component name="RunManager" selected="Cargo.Test member::test (1)">
     <configuration name="Run playground" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
       <option name="command" value="run --package playground --bin playground" />
       <option name="workingDirectory" value="file://$PROJECT_DIR$" />
@@ -109,9 +115,8 @@
         <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Test member::test::new_test" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
-      <option name="buildProfile" value="Test" />
-      <option name="command" value="test --package ndjson --lib member::test::new_test -- --exact" />
+    <configuration name="Test member::test (1)" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="test --package ndjson --lib parser::member::test" />
       <option name="workingDirectory" value="file://$PROJECT_DIR$" />
       <envs />
       <option name="emulateTerminal" value="true" />
@@ -145,9 +150,81 @@
         <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Test number::test" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="test --package ndjson --lib number::test" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test parser::number::tests::number" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="test --package ndjson --lib parser::number::tests::number -- --exact" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test parser::white_space::tests::trim" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="test --package ndjson --lib parser::white_space::tests::trim -- --exact" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test white_space::tests" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="test --package ndjson --lib parser::white_space::tests" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Cargo.Test member::test::new_test" />
+        <item itemvalue="Cargo.Test member::test (1)" />
+        <item itemvalue="Cargo.Test parser::number::tests::number" />
+        <item itemvalue="Cargo.Test number::test" />
+        <item itemvalue="Cargo.Test white_space::tests" />
+        <item itemvalue="Cargo.Test parser::white_space::tests::trim" />
       </list>
     </recent_temporary>
   </component>
@@ -173,7 +250,7 @@
       <workItem from="1725198260621" duration="191000" />
       <workItem from="1725198607420" duration="2255000" />
       <workItem from="1725255835791" duration="39000" />
-      <workItem from="1725282933432" duration="1719000" />
+      <workItem from="1725282933432" duration="5726000" />
     </task>
     <task id="LOCAL-00001" summary="Update .idea configuration and improve platform handling&#10;&#10;Replaced `.idea/ndjson_tsv.iml` with `.idea/ndjson_csv.iml` and modified related XML configurations. Enhanced `coverage.py` to handle platform-specific path separators and extend Rust toolchain coverage settings.">
       <option name="closed" value="true" />
@@ -207,7 +284,47 @@
       <option name="project" value="LOCAL" />
       <updated>1725283628936</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Move `member` module to public and improve imports&#10;&#10;Made `member` a public module for better accessibility from outside the crate. Improved the formatting of import statements for consistency and readability.">
+      <option name="closed" value="true" />
+      <created>1725284979947</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1725284979947</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Add trim function to parser for handling whitespace&#10;&#10;This commit introduces a new `trim` function in `white_space.rs` to the parser, enabling it to handle leading and trailing white spaces. It also includes a test case for the `trim` function to ensure its correct functionality when parsing input with surrounding whitespace.">
+      <option name="closed" value="true" />
+      <created>1725286497242</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1725286497242</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Fix trim parser test to handle newline character&#10;&#10;Updated the trim parser test to account for the presence of a newline character after the word &quot;rust&quot;, ensuring the parser correctly handles and skips over whitespace, including newlines. This change improves the robustness of whitespace parsing in the test scenario.">
+      <option name="closed" value="true" />
+      <created>1725286541818</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1725286541818</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Add error handling to Number enum&#10;&#10;Introduced a new variant `Error` in the `Number` enum to handle parsing errors. Implemented conversions from `ParseIntError` and `ParseFloatError` to `Number::Error`. Added tests to ensure correct functionality of the new error handling.">
+      <option name="closed" value="true" />
+      <created>1725287483576</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1725287483576</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Refactor error handling in number parsing&#10;&#10;This commit simplifies the number parsing function by removing explicit error types from its return value. It directly embeds the errors within the `Value` structure, streamlining the code and tests. This change improves readability and reduces complexity in error matching.">
+      <option name="closed" value="true" />
+      <created>1725288606641</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1725288606641</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -218,7 +335,12 @@
     <MESSAGE value="Refactor code for with_raw_value module relocation&#10;&#10;Moved `with_raw_value` module to a higher-level directory for better code organization. Updated all necessary import paths to reflect this change. Also included minor updates to the `.idea` workspace configuration for project consistency." />
     <MESSAGE value="Rename `TypedValue` to `Value` across the codebase&#10;&#10;Refactor all instances of `TypedValue` to `Value` to simplify naming and enhance readability. This change includes adjustments in parser modules, unit tests, and type conversions." />
     <MESSAGE value="Remove `typed_value.rs` and integrate with `value.rs`&#10;&#10;Consolidated the functionality of `typed_value.rs` into `value.rs` for better maintainability. Updated all the necessary import paths and adjusted tests to reflect the changes." />
-    <option name="LAST_COMMIT_MESSAGE" value="Remove `typed_value.rs` and integrate with `value.rs`&#10;&#10;Consolidated the functionality of `typed_value.rs` into `value.rs` for better maintainability. Updated all the necessary import paths and adjusted tests to reflect the changes." />
+    <MESSAGE value="Move `member` module to public and improve imports&#10;&#10;Made `member` a public module for better accessibility from outside the crate. Improved the formatting of import statements for consistency and readability." />
+    <MESSAGE value="Add trim function to parser for handling whitespace&#10;&#10;This commit introduces a new `trim` function in `white_space.rs` to the parser, enabling it to handle leading and trailing white spaces. It also includes a test case for the `trim` function to ensure its correct functionality when parsing input with surrounding whitespace." />
+    <MESSAGE value="Fix trim parser test to handle newline character&#10;&#10;Updated the trim parser test to account for the presence of a newline character after the word &quot;rust&quot;, ensuring the parser correctly handles and skips over whitespace, including newlines. This change improves the robustness of whitespace parsing in the test scenario." />
+    <MESSAGE value="Add error handling to Number enum&#10;&#10;Introduced a new variant `Error` in the `Number` enum to handle parsing errors. Implemented conversions from `ParseIntError` and `ParseFloatError` to `Number::Error`. Added tests to ensure correct functionality of the new error handling." />
+    <MESSAGE value="Refactor error handling in number parsing&#10;&#10;This commit simplifies the number parsing function by removing explicit error types from its return value. It directly embeds the errors within the `Value` structure, streamlining the code and tests. This change improves readability and reduces complexity in error matching." />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor error handling in number parsing&#10;&#10;This commit simplifies the number parsing function by removing explicit error types from its return value. It directly embeds the errors within the `Value` structure, streamlining the code and tests. This change improves readability and reduces complexity in error matching." />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
@@ -228,6 +350,7 @@
     </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/ndjson_csv$coverage.coverage" NAME="coverage Coverage Results" MODIFIED="1725199601094" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ndjson_csv$Test_white_space__tests.info" NAME="Test white_space::tests Coverage Results" MODIFIED="1725286472742" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="RsCoverageRunner" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" CONTEXT_FILE_PATH="F:\ndjson_csv" />
+    <SUITE FILE_PATH="coverage/ndjson_csv$Test_member__test.info" NAME="Test member::test Coverage Results" MODIFIED="1725284954555" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="RsCoverageRunner" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" CONTEXT_FILE_PATH="F:\ndjson_csv" />
   </component>
 </project>

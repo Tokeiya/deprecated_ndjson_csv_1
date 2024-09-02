@@ -1,5 +1,5 @@
-use std::num::{ParseIntError, ParseFloatError};
 use super::parse_number_error::ParseNumberError;
+use std::num::{ParseFloatError, ParseIntError};
 #[derive(Debug)]
 pub enum Number {
 	Integer(i128),

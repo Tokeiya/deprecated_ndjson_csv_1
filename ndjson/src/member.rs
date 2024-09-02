@@ -9,10 +9,7 @@ pub struct Member {
 
 impl Member {
 	pub fn new(name: String, value: WithRawValue<Value>) -> Self {
-		Member {
-			name,
-			value,
-		}
+		Member { name, value }
 	}
 
 	pub fn name(&self) -> &str {
@@ -39,7 +36,6 @@ mod test {
 			matches!(&fixture.value.value(),Value::Number(num) if matches!(num,Number::Integer(i) if i==&42))
 		);
 
-
 		assert_eq!(fixture.value.raw(), "42");
 	}
 
@@ -60,7 +56,7 @@ mod test {
 			WithRawValue::new_from_str("null", Value::Null),
 		);
 
-		assert!(matches!(fixture.value().value(),Value::Null));
+		assert!(matches!(fixture.value().value(), Value::Null));
 		assert_eq!(fixture.value().raw(), "null");
 	}
 }
