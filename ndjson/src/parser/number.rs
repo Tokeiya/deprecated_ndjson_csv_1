@@ -3,9 +3,9 @@ use combine as cmb;
 use combine::parser::char as chr;
 use combine::{Parser, Stream};
 
-use crate::with_raw_value::WithRawValue;
 use crate::number::Number;
 use crate::parse_number_error::ParseNumberError;
+use crate::with_raw_value::WithRawValue;
 
 use crate::value::Value;
 

@@ -1,4 +1,4 @@
-use combine::parser::{char as chr};
+use combine::parser::char as chr;
 use combine::{parser, Parser, Stream};
 
 fn expr_<I: Stream<Token = char>>() -> impl Parser<I, Output = String> {

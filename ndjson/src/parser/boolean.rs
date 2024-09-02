@@ -1,11 +1,10 @@
-use crate::with_raw_value::WithRawValue;
 use crate::value::Value;
+use crate::with_raw_value::WithRawValue;
 use combine::parser::char as chr;
 use combine::{Parser, Stream};
 pub fn boolean<I: Stream<Token = char>>() -> impl Parser<I, Output = WithRawValue<Value>> {
 	let t = chr::string("true").map(|_| WithRawValue::new_from_str("true", Value::from(true)));
-	let f =
-		chr::string("false").map(|_| WithRawValue::new_from_str("false", Value::from(false)));
+	let f = chr::string("false").map(|_| WithRawValue::new_from_str("false", Value::from(false)));
 
 	t.or(f)
 }

@@ -1,5 +1,5 @@
-use crate::with_raw_value::WithRawValue;
 use crate::value::Value;
+use crate::with_raw_value::WithRawValue;
 use combine as cmb;
 use combine::parser::char as chr;
 use combine::{Parser, Stream};
@@ -69,10 +69,7 @@ pub fn string<I: Stream<Token = char>>() -> impl Parser<I, Output = WithRawValue
 	});
 
 	(chr::char('"'), tmp, chr::char('"')).map(|(_, v, _)| {
-		WithRawValue::new_from_string(
-			format!(r#""{}""#, v.raw()),
-			Value::from(v.value().as_str()),
-		)
+		WithRawValue::new_from_string(format!(r#""{}""#, v.raw()), Value::from(v.value().as_str()))
 	})
 }
 

@@ -1,8 +1,7 @@
 use super::number::Number;
+use super::with_raw_value::WithRawValue;
 use std::collections::HashMap;
 use std::vec::Vec;
-use super::with_raw_value::WithRawValue;
-
 
 pub enum Value {
 	Boolean(bool),
@@ -52,14 +51,10 @@ mod test {
 	#[test]
 	fn from_number() {
 		let fixture = Value::from(Number::from(42));
-		assert!(
-			matches!(fixture,Value::Number(num) if matches!(num,Number::Integer(i) if i==42))
-		);
+		assert!(matches!(fixture,Value::Number(num) if matches!(num,Number::Integer(i) if i==42)));
 
-		assert!(
-			matches!(Value::from(Number::from(std::f64::consts::PI)),
-			Value::Number(num) if matches!(num,Number::Float(f) if f==std::f64::consts::PI))
-		)
+		assert!(matches!(Value::from(Number::from(std::f64::consts::PI)),
+			Value::Number(num) if matches!(num,Number::Float(f) if f==std::f64::consts::PI)))
 	}
 
 	#[test]
