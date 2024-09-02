@@ -1,12 +1,14 @@
 use super::number::Number;
 use std::collections::HashMap;
 use std::vec::Vec;
+use super::with_raw_value::WithRawValue;
+
 
 pub enum TypedValue {
 	Boolean(bool),
 	Null,
-	Object(HashMap<String, TypedValue>),
-	Array(Vec<TypedValue>),
+	Object(HashMap<String, WithRawValue<TypedValue>>),
+	Array(Vec<WithRawValue<TypedValue>>),
 	Number(Number),
 	String(String),
 }

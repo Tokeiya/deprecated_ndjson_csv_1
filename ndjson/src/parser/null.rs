@@ -1,4 +1,4 @@
-use crate::parser::with_raw_value::WithRawValue;
+use crate::with_raw_value::WithRawValue;
 use crate::typed_value::TypedValue;
 use combine::parser::char::string;
 use combine::{Parser, Stream};
