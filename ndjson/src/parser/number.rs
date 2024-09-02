@@ -96,8 +96,7 @@ fn number_str<I: Stream<Token = char>>() -> impl Parser<I, Output = (TextPresent
 	})
 }
 
-pub fn number<I: Stream<Token = char>>(
-) -> impl Parser<I, Output = WithRawValue<Result<Value, ParseNumberError>>> {
+pub fn number<I: Stream<Token = char>>() -> impl Parser<I, Output = WithRawValue<Value>> {
 	number_str().map(|(txt, flg)| {
 		let TextPresentation::Text(t) = txt else {
 			unreachable!()
@@ -106,13 +105,13 @@ pub fn number<I: Stream<Token = char>>(
 
 		if flg {
 			match t.parse::<i128>() {
-				Ok(i) => WithRawValue::new_from_str(t, Ok(Value::from(Number::from(i)))),
-				Err(e) => WithRawValue::new_from_str(t, Err(ParseNumberError::Integer(e))),
+				Ok(i) => WithRawValue::new_from_str(t, Value::from(Number::from(i))),
+				Err(e) => WithRawValue::new_from_str(t, Value::from(Number::from(e))),
 			}
 		} else {
 			match t.parse::<f64>() {
-				Ok(f) => WithRawValue::new_from_str(t, Ok(Value::from(Number::from(f)))),
-				Err(e) => WithRawValue::new_from_str(t, Err(ParseNumberError::Float(e))),
+				Ok(f) => WithRawValue::new_from_str(t, Value::from(Number::from(f))),
+				Err(e) => WithRawValue::new_from_str(t, Value::from(Number::from(e))),
 			}
 		}
 	})
@@ -129,66 +128,45 @@ mod tests {
 
 	#[test]
 	fn number() {
-		fn a_int(
-			(act, rem): (WithRawValue<Result<Value, ParseNumberError>>, &str),
-			expected: i128,
-			expected_raw: &str,
-		) {
+		fn a_int((act, rem): (WithRawValue<Value>, &str), expected: i128, expected_raw: &str) {
 			assert_eq!(rem, "");
 
-			let Ok(Value::Number(Number::Integer(i))) = act.value() else {
+			let Value::Number(Number::Integer(i)) = act.value() else {
 				unreachable!()
 			};
 			assert_eq!(i, &expected);
 			assert_eq!(act.raw(), expected_raw)
 		}
 
-		fn a_flt(
-			(act, rem): (WithRawValue<Result<Value, ParseNumberError>>, &str),
-			expected: f64,
-			expected_raw: &str,
-		) {
+		fn a_flt((act, rem): (WithRawValue<Value>, &str), expected: f64, expected_raw: &str) {
 			assert_eq!(rem, "");
 
-			let Ok(Value::Number(Number::Float(f))) = act.value() else {
+			let Value::Number(Number::Float(f)) = act.value() else {
 				unreachable!()
 			};
 			assert_eq!(f, &expected);
 			assert_eq!(act.raw(), expected_raw)
 		}
 
-		fn a_err(
-			act: (WithRawValue<Result<Value, ParseNumberError>>, &str),
-			is_int: bool,
-			expected: &str,
-		) {
-			assert_eq!(act.1, expected);
-
-			if is_int {
-				assert!(matches!(act.0.value(), Err(ParseNumberError::Integer(_))))
-			} else {
-				assert!(matches!(act.0.value(), Err(ParseNumberError::Float(_))))
-			}
-		}
-
 		let mut parser = super::number();
 
-		println!("{}", i128::MAX);
-		println!("{}", i128::MIN);
+		let (act, rem) = parser
+			.parse("170141183460469231731687303715884105728")
+			.unwrap();
+		assert_eq!(rem, "");
+		assert_eq!(act.raw(), "170141183460469231731687303715884105728");
 
-		a_err(
-			parser
-				.parse("170141183460469231731687303715884105728")
-				.unwrap(),
-			true,
-			"",
-		);
-		a_err(
-			parser
-				.parse("-170141183460469231731687303715884105729")
-				.unwrap(),
-			true,
-			"",
+		assert!(matches!(act.value(),Value::Number(num) if
+				matches!(&num,Number::Error(e) if
+					matches!(e,ParseNumberError::Integer(_)))));
+
+		let (act, rem) = parser
+			.parse("-170141183460469231731687303715884105729")
+			.unwrap();
+		assert_eq!(rem, "");
+		assert_eq!(act.raw(), "-170141183460469231731687303715884105729");
+		assert!(
+			matches!(act.value(),Value::Number(num) if matches!(num,Number::Error(e) if matches!(e,ParseNumberError::Integer(_))))
 		);
 
 		a_int(parser.parse("0").unwrap(), 0, "0");
