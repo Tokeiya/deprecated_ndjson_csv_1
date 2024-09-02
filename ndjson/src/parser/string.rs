@@ -1,5 +1,5 @@
 use crate::with_raw_value::WithRawValue;
-use crate::typed_value::TypedValue;
+use crate::value::Value;
 use combine as cmb;
 use combine::parser::char as chr;
 use combine::{Parser, Stream};
@@ -53,7 +53,7 @@ fn escape<I: Stream<Token = char>>() -> impl Parser<I, Output = WithRawValue<cha
 	})
 }
 
-pub fn string<I: Stream<Token = char>>() -> impl Parser<I, Output = WithRawValue<TypedValue>> {
+pub fn string<I: Stream<Token = char>>() -> impl Parser<I, Output = WithRawValue<Value>> {
 	let tmp = unescaped::<I>().or(escape::<I>());
 
 	let tmp = cmb::many::<Vec<WithRawValue<char>>, I, _>(tmp).map(|v| {
@@ -71,7 +71,7 @@ pub fn string<I: Stream<Token = char>>() -> impl Parser<I, Output = WithRawValue
 	(chr::char('"'), tmp, chr::char('"')).map(|(_, v, _)| {
 		WithRawValue::new_from_string(
 			format!(r#""{}""#, v.raw()),
-			TypedValue::from(v.value().as_str()),
+			Value::from(v.value().as_str()),
 		)
 	})
 }
@@ -190,7 +190,7 @@ mod tests {
 			};
 			assert_eq!(rem, "");
 
-			let TypedValue::String(s) = act.value() else {
+			let Value::String(s) = act.value() else {
 				unreachable!()
 			};
 

@@ -7,9 +7,7 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="07d6fcac-9c3a-4d93-a198-0ad0d898df43" name="Changes" comment="Update .idea configuration and improve platform handling&#10;&#10;Replaced `.idea/ndjson_tsv.iml` with `.idea/ndjson_csv.iml` and modified related XML configurations. Enhanced `coverage.py` to handle platform-specific path separators and extend Rust toolchain coverage settings.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="07d6fcac-9c3a-4d93-a198-0ad0d898df43" name="Changes" comment="Refactor code for with_raw_value module relocation&#10;&#10;Moved `with_raw_value` module to a higher-level directory for better code organization. Updated all necessary import paths to reflect this change. Also included minor updates to the `.idea` workspace configuration for project consistency." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -126,6 +124,7 @@
       <workItem from="1725198260621" duration="191000" />
       <workItem from="1725198607420" duration="2255000" />
       <workItem from="1725255835791" duration="39000" />
+      <workItem from="1725282933432" duration="470000" />
     </task>
     <task id="LOCAL-00001" summary="Update .idea configuration and improve platform handling&#10;&#10;Replaced `.idea/ndjson_tsv.iml` with `.idea/ndjson_csv.iml` and modified related XML configurations. Enhanced `coverage.py` to handle platform-specific path separators and extend Rust toolchain coverage settings.">
       <option name="closed" value="true" />
@@ -135,7 +134,15 @@
       <option name="project" value="LOCAL" />
       <updated>1725203215283</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Refactor code for with_raw_value module relocation&#10;&#10;Moved `with_raw_value` module to a higher-level directory for better code organization. Updated all necessary import paths to reflect this change. Also included minor updates to the `.idea` workspace configuration for project consistency.">
+      <option name="closed" value="true" />
+      <created>1725283395317</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1725283395317</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -143,7 +150,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Update .idea configuration and improve platform handling&#10;&#10;Replaced `.idea/ndjson_tsv.iml` with `.idea/ndjson_csv.iml` and modified related XML configurations. Enhanced `coverage.py` to handle platform-specific path separators and extend Rust toolchain coverage settings." />
-    <option name="LAST_COMMIT_MESSAGE" value="Update .idea configuration and improve platform handling&#10;&#10;Replaced `.idea/ndjson_tsv.iml` with `.idea/ndjson_csv.iml` and modified related XML configurations. Enhanced `coverage.py` to handle platform-specific path separators and extend Rust toolchain coverage settings." />
+    <MESSAGE value="Refactor code for with_raw_value module relocation&#10;&#10;Moved `with_raw_value` module to a higher-level directory for better code organization. Updated all necessary import paths to reflect this change. Also included minor updates to the `.idea` workspace configuration for project consistency." />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor code for with_raw_value module relocation&#10;&#10;Moved `with_raw_value` module to a higher-level directory for better code organization. Updated all necessary import paths to reflect this change. Also included minor updates to the `.idea` workspace configuration for project consistency." />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>

@@ -7,7 +7,7 @@ use crate::with_raw_value::WithRawValue;
 use crate::number::Number;
 use crate::parse_number_error::ParseNumberError;
 
-use crate::typed_value::TypedValue;
+use crate::value::Value;
 
 fn zero<I: Stream<Token = char>>() -> impl Parser<I, Output = TextPresentation> {
 	chr::char('0').map(TextPresentation::from)
@@ -97,7 +97,7 @@ fn number_str<I: Stream<Token = char>>() -> impl Parser<I, Output = (TextPresent
 }
 
 pub fn number<I: Stream<Token = char>>(
-) -> impl Parser<I, Output = WithRawValue<Result<TypedValue, ParseNumberError>>> {
+) -> impl Parser<I, Output = WithRawValue<Result<Value, ParseNumberError>>> {
 	number_str().map(|(txt, flg)| {
 		let TextPresentation::Text(t) = txt else {
 			unreachable!()
@@ -106,12 +106,12 @@ pub fn number<I: Stream<Token = char>>(
 
 		if flg {
 			match t.parse::<i128>() {
-				Ok(i) => WithRawValue::new_from_str(t, Ok(TypedValue::from(Number::from(i)))),
+				Ok(i) => WithRawValue::new_from_str(t, Ok(Value::from(Number::from(i)))),
 				Err(e) => WithRawValue::new_from_str(t, Err(ParseNumberError::Integer(e))),
 			}
 		} else {
 			match t.parse::<f64>() {
-				Ok(f) => WithRawValue::new_from_str(t, Ok(TypedValue::from(Number::from(f)))),
+				Ok(f) => WithRawValue::new_from_str(t, Ok(Value::from(Number::from(f)))),
 				Err(e) => WithRawValue::new_from_str(t, Err(ParseNumberError::Float(e))),
 			}
 		}
@@ -130,13 +130,13 @@ mod tests {
 	#[test]
 	fn number() {
 		fn a_int(
-			(act, rem): (WithRawValue<Result<TypedValue, ParseNumberError>>, &str),
+			(act, rem): (WithRawValue<Result<Value, ParseNumberError>>, &str),
 			expected: i128,
 			expected_raw: &str,
 		) {
 			assert_eq!(rem, "");
 
-			let Ok(TypedValue::Number(Number::Integer(i))) = act.value() else {
+			let Ok(Value::Number(Number::Integer(i))) = act.value() else {
 				unreachable!()
 			};
 			assert_eq!(i, &expected);
@@ -144,13 +144,13 @@ mod tests {
 		}
 
 		fn a_flt(
-			(act, rem): (WithRawValue<Result<TypedValue, ParseNumberError>>, &str),
+			(act, rem): (WithRawValue<Result<Value, ParseNumberError>>, &str),
 			expected: f64,
 			expected_raw: &str,
 		) {
 			assert_eq!(rem, "");
 
-			let Ok(TypedValue::Number(Number::Float(f))) = act.value() else {
+			let Ok(Value::Number(Number::Float(f))) = act.value() else {
 				unreachable!()
 			};
 			assert_eq!(f, &expected);
@@ -158,7 +158,7 @@ mod tests {
 		}
 
 		fn a_err(
-			act: (WithRawValue<Result<TypedValue, ParseNumberError>>, &str),
+			act: (WithRawValue<Result<Value, ParseNumberError>>, &str),
 			is_int: bool,
 			expected: &str,
 		) {

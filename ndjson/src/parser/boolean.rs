@@ -1,11 +1,11 @@
 use crate::with_raw_value::WithRawValue;
-use crate::typed_value::TypedValue;
+use crate::value::Value;
 use combine::parser::char as chr;
 use combine::{Parser, Stream};
-pub fn boolean<I: Stream<Token = char>>() -> impl Parser<I, Output = WithRawValue<TypedValue>> {
-	let t = chr::string("true").map(|_| WithRawValue::new_from_str("true", TypedValue::from(true)));
+pub fn boolean<I: Stream<Token = char>>() -> impl Parser<I, Output = WithRawValue<Value>> {
+	let t = chr::string("true").map(|_| WithRawValue::new_from_str("true", Value::from(true)));
 	let f =
-		chr::string("false").map(|_| WithRawValue::new_from_str("false", TypedValue::from(false)));
+		chr::string("false").map(|_| WithRawValue::new_from_str("false", Value::from(false)));
 
 	t.or(f)
 }
@@ -22,7 +22,7 @@ mod test {
 		assert_eq!(rem, "");
 		assert_eq!(act.raw(), "true");
 
-		matches!(act.value(), TypedValue::Boolean(b) if b==&true);
+		matches!(act.value(), Value::Boolean(b) if b==&true);
 	}
 
 	#[test]
@@ -33,7 +33,7 @@ mod test {
 		assert_eq!(rem, "");
 		assert_eq!(act.raw(), "false");
 
-		matches!(act.value(), TypedValue::Boolean(b) if b==&false);
+		matches!(act.value(), Value::Boolean(b) if b==&false);
 	}
 
 	#[test]
