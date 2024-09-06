@@ -2,6 +2,10 @@ mod poc;
 mod sample;
 
 fn main() {
-	let a = "foo  bar";
-	println!("{}", a.trim())
+	let foo = "  \t  hello \r \n  ";
+
+	let a = foo.trim();
+
+	println!("{foo}");
+	println!("{a}:{}", a.len())
 }

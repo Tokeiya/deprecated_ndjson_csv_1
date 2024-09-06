@@ -15,6 +15,10 @@ pub trait TextPresentation {
 	fn build_trimmed(&self, buffer: &mut String);
 }
 
+pub fn ws(c: char) -> bool {
+	todo!()
+}
+
 #[cfg(test)]
 pub mod test_helper {
 	use super::*;

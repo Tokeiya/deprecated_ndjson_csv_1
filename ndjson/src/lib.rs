@@ -6,3 +6,5 @@ pub mod text_presentation;
 pub mod value;
 pub mod with_raw_value;
 mod bool_value;
+mod null_value;
+mod string_value;
