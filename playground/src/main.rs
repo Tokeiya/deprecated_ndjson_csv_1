@@ -1,8 +1,12 @@
 mod sample;
+mod poc;
 
 fn main() {
-	let c = '\u{000020}';
+	let a=Result::<i32,i32>::Ok(100i32);
 
-	println!("{c}");
-	println!("{}", c == '\u{000020}')
+	for i in a {
+		print!("{i}")
+	}
+
+
 }
