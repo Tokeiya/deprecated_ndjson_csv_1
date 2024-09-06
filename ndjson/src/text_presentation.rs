@@ -1,14 +1,51 @@
-#[derive(Eq, PartialEq)]
-pub enum Foo {}
-
 pub trait TextPresentation {
 	fn raw(&self) -> String {
-		todo!()
+		let mut buffer = String::new();
+		self.build_raw(&mut buffer);
+		buffer
+	}
+	fn trimmed(&self) -> String {
+		let mut buffer = String::new();
+		self.build_trimmed(&mut buffer);
+		buffer
 	}
 
-	fn trimmed(&self) -> String;
+	fn build_raw(&self, buffer: &mut String);
 
-	fn build(&self, buffer: &mut String);
+	fn build_trimmed(&self, buffer: &mut String);
+}
 
-	fn trimmed_build(&self, buffer: &mut String);
+#[cfg(test)]
+mod test {
+	use super::*;
+	use mockall::mock;
+
+	mock! {
+		Dummy{}
+		impl TextPresentation for Dummy{
+			fn build_raw(&self, buffer: &mut String);
+			fn build_trimmed(&self, buffer: &mut String);
+		}
+	}
+
+	#[test]
+	fn raw() {
+		let mut dummy = MockDummy::new();
+		dummy.expect_build_raw().returning_st(|x| {
+			x.push_str("hello")
+		});
+
+		assert_eq!(dummy.raw(), "hello".to_string())
+	}
+
+	#[test]
+	fn trimmed() {
+		let mut dummy = MockDummy::new();
+
+		dummy.expect_build_trimmed().returning_st(|x| {
+			x.push_str("world")
+		});
+
+		assert_eq!(dummy.trimmed(), "world");
+	}
 }

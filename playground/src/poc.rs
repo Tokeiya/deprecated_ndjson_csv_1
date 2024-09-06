@@ -1,2 +1,2 @@
-mod raw_text;
 mod number;
+mod raw_text;
