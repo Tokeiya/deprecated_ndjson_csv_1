@@ -7,20 +7,13 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ce594828-9276-4ad5-a20a-8248de00611f" name="Changes" comment="Add NullValue module with tests&#10;&#10;Introduced `null_value` module containing `NullValue` struct implementing `TextPresentation`. Added unit tests to check raw and trimmed text behaviors. Made necessary changes to IntelliJ configuration files.">
-      <change afterPath="$PROJECT_DIR$/ndjson/src/null_value.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ndjson/src/string_value.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ndjson/src/lib.rs" beforeDir="false" afterPath="$PROJECT_DIR$/ndjson/src/lib.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ndjson/src/text_presentation.rs" beforeDir="false" afterPath="$PROJECT_DIR$/ndjson/src/text_presentation.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/playground/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/playground/src/main.rs" afterDir="false" />
-    </list>
+    <list default="true" id="ce594828-9276-4ad5-a20a-8248de00611f" name="Changes" comment="Add NullValue and StringValue modules with corresponding tests&#10;&#10;Introduced `null_value` and `string_value` modules to handle specific text presentations. Implemented the required functionalities and added unit tests to ensure correct behavior. Updated main logic for cleaner string trimming." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="RsBuildProfile:dev" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="RsBuildProfile:test" />
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -58,30 +51,31 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Cargo.Run playground.executor&quot;: &quot;Run&quot;,
-    &quot;Cargo.Test bool_value::test.executor&quot;: &quot;Run&quot;,
-    &quot;Cargo.Test null_value::test.executor&quot;: &quot;Run&quot;,
-    &quot;Cargo.Test string_value::test.executor&quot;: &quot;Run&quot;,
-    &quot;Cargo.Test text_presentation::test.executor&quot;: &quot;Run&quot;,
-    &quot;Cargo.Test text_presentation::test::raw.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.rust.reset.selective.auto.import&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;raw__text__overhaul&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;org.rust.cargo.project.model.PROJECT_DISCOVERY&quot;: &quot;true&quot;,
-    &quot;org.rust.first.attach.projects&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;actions.on.save&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Cargo.Run playground.executor": "Run",
+    "Cargo.Test bool_value::test.executor": "Run",
+    "Cargo.Test null_value::test.executor": "Run",
+    "Cargo.Test string_value::test.executor": "Run",
+    "Cargo.Test string_value::test::value.executor": "Run",
+    "Cargo.Test text_presentation::test.executor": "Run",
+    "Cargo.Test text_presentation::test::raw.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.rust.reset.selective.auto.import": "true",
+    "git-widget-placeholder": "raw__text__overhaul",
+    "ignore.virus.scanning.warn.message": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "org.rust.cargo.project.model.PROJECT_DISCOVERY": "true",
+    "org.rust.first.attach.projects": "true",
+    "settings.editor.selected.configurable": "actions.on.save",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
-  <component name="RunManager" selected="Cargo.Test string_value::test">
+}]]></component>
+  <component name="RunManager" selected="Cargo.Test string_value::test::value">
     <configuration name="Run playground" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
       <option name="buildProfileId" value="dev" />
       <option name="command" value="run --package playground --bin playground" />
@@ -171,6 +165,23 @@
         <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Test string_value::test::value" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="test --package ndjson --lib string_value::test::value -- --exact" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Test text_presentation::test" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
       <option name="command" value="test --package ndjson --lib text_presentation::test" />
       <option name="workingDirectory" value="file://$PROJECT_DIR$" />
@@ -188,30 +199,13 @@
         <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Test text_presentation::test::raw" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
-      <option name="command" value="test --package ndjson --lib text_presentation::test::raw -- --exact" />
-      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
-      <envs />
-      <option name="emulateTerminal" value="true" />
-      <option name="channel" value="DEFAULT" />
-      <option name="requiredFeatures" value="true" />
-      <option name="allFeatures" value="false" />
-      <option name="withSudo" value="false" />
-      <option name="buildTarget" value="REMOTE" />
-      <option name="backtrace" value="SHORT" />
-      <option name="isRedirectInput" value="false" />
-      <option name="redirectInputPath" value="" />
-      <method v="2">
-        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
-      </method>
-    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Cargo.Test string_value::test::value" />
         <item itemvalue="Cargo.Test string_value::test" />
         <item itemvalue="Cargo.Test null_value::test" />
         <item itemvalue="Cargo.Test bool_value::test" />
         <item itemvalue="Cargo.Test text_presentation::test" />
-        <item itemvalue="Cargo.Test text_presentation::test::raw" />
       </list>
     </recent_temporary>
   </component>
@@ -227,6 +221,7 @@
       <option name="presentableId" value="Default" />
       <updated>1725620472155</updated>
       <workItem from="1725620473485" duration="5569000" />
+      <workItem from="1725626175402" duration="3249000" />
     </task>
     <task id="LOCAL-00001" summary="Remove unused .idea configs and enhance text presentation&#10;&#10;Deleted unnecessary IntelliJ configuration files to clean up the project structure. Refactored `text_presentation.rs` and added unit tests to verify `raw` and `trimmed` methods. Also updated `Cargo.lock` with new dependencies for testing.">
       <option name="closed" value="true" />
@@ -244,7 +239,15 @@
       <option name="project" value="LOCAL" />
       <updated>1725623781502</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Add NullValue and StringValue modules with corresponding tests&#10;&#10;Introduced `null_value` and `string_value` modules to handle specific text presentations. Implemented the required functionalities and added unit tests to ensure correct behavior. Updated main logic for cleaner string trimming.">
+      <option name="closed" value="true" />
+      <created>1725626764182</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1725626764182</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -253,6 +256,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Remove unused .idea configs and enhance text presentation&#10;&#10;Deleted unnecessary IntelliJ configuration files to clean up the project structure. Refactored `text_presentation.rs` and added unit tests to verify `raw` and `trimmed` methods. Also updated `Cargo.lock` with new dependencies for testing." />
     <MESSAGE value="Add BoolValue and test helpers; refactor main function&#10;&#10;Introduced a new module `bool_value` with `BoolValue` struct implementing `TextPresentation`. Added test helpers in `text_presentation.rs` for asserting raw and trimmed text. Refactored `main.rs` to simplify string printing logic." />
-    <option name="LAST_COMMIT_MESSAGE" value="Add BoolValue and test helpers; refactor main function&#10;&#10;Introduced a new module `bool_value` with `BoolValue` struct implementing `TextPresentation`. Added test helpers in `text_presentation.rs` for asserting raw and trimmed text. Refactored `main.rs` to simplify string printing logic." />
+    <MESSAGE value="Add NullValue module with tests&#10;&#10;Introduced `null_value` module containing `NullValue` struct implementing `TextPresentation`. Added unit tests to check raw and trimmed text behaviors. Made necessary changes to IntelliJ configuration files." />
+    <MESSAGE value="Add NullValue and StringValue modules with corresponding tests&#10;&#10;Introduced `null_value` and `string_value` modules to handle specific text presentations. Implemented the required functionalities and added unit tests to ensure correct behavior. Updated main logic for cleaner string trimming." />
+    <option name="LAST_COMMIT_MESSAGE" value="Add NullValue and StringValue modules with corresponding tests&#10;&#10;Introduced `null_value` and `string_value` modules to handle specific text presentations. Implemented the required functionalities and added unit tests to ensure correct behavior. Updated main logic for cleaner string trimming." />
   </component>
 </project>

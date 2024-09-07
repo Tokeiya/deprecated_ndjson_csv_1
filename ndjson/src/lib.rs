@@ -8,3 +8,4 @@ pub mod with_raw_value;
 mod bool_value;
 mod null_value;
 mod string_value;
+mod number_value;
