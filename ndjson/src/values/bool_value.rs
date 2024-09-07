@@ -33,7 +33,7 @@ impl TextPresentation for BoolValue {
 #[cfg(test)]
 mod test {
 	use super::*;
-	use crate::text_presentation::test_helper::*;
+	use crate::values::text_presentation::test_helper::*;
 
 	#[test]
 	fn new() {

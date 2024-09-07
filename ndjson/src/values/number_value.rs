@@ -16,7 +16,7 @@ impl NumberValue {
 	}
 }
 
-impl TextPresentation for NumberValue{
+impl TextPresentation for NumberValue {
 	fn build_raw(&self, buffer: &mut String) {
 		todo!()
 	}
@@ -27,3 +27,4 @@ impl TextPresentation for NumberValue{
 }
 
 #[cfg(test)]
+mod test {}
