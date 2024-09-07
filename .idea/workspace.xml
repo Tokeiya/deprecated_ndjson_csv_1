@@ -7,12 +7,7 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ce594828-9276-4ad5-a20a-8248de00611f" name="Changes" comment="Add NullValue and StringValue modules with corresponding tests&#10;&#10;Introduced `null_value` and `string_value` modules to handle specific text presentations. Implemented the required functionalities and added unit tests to ensure correct behavior. Updated main logic for cleaner string trimming.">
-      <change afterPath="$PROJECT_DIR$/ndjson/src/number_value.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ndjson/src/lib.rs" beforeDir="false" afterPath="$PROJECT_DIR$/ndjson/src/lib.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ndjson/src/text_presentation.rs" beforeDir="false" afterPath="$PROJECT_DIR$/ndjson/src/text_presentation.rs" afterDir="false" />
-    </list>
+    <list default="true" id="ce594828-9276-4ad5-a20a-8248de00611f" name="Changes" comment="Add NullValue and StringValue modules with corresponding tests&#10;&#10;Introduced `null_value` and `string_value` modules to handle specific text presentations. Implemented the required functionalities and added unit tests to ensure correct behavior. Updated main logic for cleaner string trimming." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -226,7 +221,7 @@
       <option name="presentableId" value="Default" />
       <updated>1725620472155</updated>
       <workItem from="1725620473485" duration="5569000" />
-      <workItem from="1725626175402" duration="2642000" />
+      <workItem from="1725626175402" duration="3249000" />
     </task>
     <task id="LOCAL-00001" summary="Remove unused .idea configs and enhance text presentation&#10;&#10;Deleted unnecessary IntelliJ configuration files to clean up the project structure. Refactored `text_presentation.rs` and added unit tests to verify `raw` and `trimmed` methods. Also updated `Cargo.lock` with new dependencies for testing.">
       <option name="closed" value="true" />
