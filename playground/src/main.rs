@@ -7,7 +7,4 @@ mod sample;
 
 pub struct Foo(String);
 
-fn main() {
-	let s = "hello".to_string();
-	let mut h = DefaultHasher::new();
-}
+fn main() {}

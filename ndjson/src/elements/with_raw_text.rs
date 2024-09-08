@@ -7,21 +7,21 @@ pub struct WithRawText<T> {
 
 impl<T> WithRawText<T> {
 	pub fn new(value: T, raw_text: String) -> Self {
-		todo!()
+		Self { value, raw_text }
 	}
 
 	pub fn value(&self) -> &T {
-		todo!()
+		&self.value
 	}
 }
 
 impl<T> TextPresentation for WithRawText<T> {
 	fn raw_text(&self) -> &str {
-		todo!()
+		self.raw_text.as_str()
 	}
 
 	fn trimmed_text(&self) -> &str {
-		todo!()
+		self.raw_text.trim()
 	}
 }
 
@@ -36,5 +36,34 @@ pub mod test_helper {
 		pub fn assert_trimmed(&self, expected: &str) {
 			assert_eq!(self.trimmed_text(), expected)
 		}
+	}
+}
+
+
+#[cfg(test)]
+mod test {
+	use super::*;
+	use super::super::text_presentation::test_helper::*;
+
+	#[test]
+	fn from_string() {
+		let fixture = WithRawText::new(20, 20.to_string());
+		assert_eq!(fixture.value, 20);
+		assert_eq!(fixture.raw_text, "20");
+	}
+
+	#[test]
+	fn text_presentation() {
+		let expected = add_spaces("42.195");
+		let fixture = WithRawText::new(420195, expected.to_string());
+
+		assert_raw(&fixture, expected.as_str());
+		assert_trimmed(&fixture, "42.195");
+	}
+
+	#[test]
+	fn value() {
+		let fixture = WithRawText::new(20, 20.to_string());
+		assert_eq!(fixture.value(), &20);
 	}
 }

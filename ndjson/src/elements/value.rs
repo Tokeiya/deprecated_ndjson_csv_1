@@ -2,7 +2,6 @@ use super::with_raw_text::WithRawText;
 use crate::elements::array_value::ArrayValue;
 use crate::elements::null_value::NullValue;
 use crate::elements::number_value::Number;
-use crate::elements::object_key::ObjectKey;
 use crate::elements::object_value_element::ObjectValueElement;
 use crate::elements::parse_number_error::ParseNumberError;
 use crate::elements::string_value::StringValue;
@@ -13,7 +12,7 @@ pub type BooleanValue = WithRawText<bool>;
 
 pub type NumberValue = WithRawText<Result<Number, ParseNumberError>>;
 
-pub type ObjectValue = HashMap<ObjectKey, ObjectValueElement>;
+pub type ObjectValue = HashMap<StringValue, ObjectValueElement>;
 pub enum TypedValue {
 	Boolean(BooleanValue),
 	Null(NullValue),
