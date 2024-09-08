@@ -1,11 +1,13 @@
+use std::collections::HashMap;
+use std::hash::{BuildHasher, DefaultHasher, Hash, Hasher};
+use std::net::ToSocketAddrs;
+
 mod poc;
 mod sample;
 
+pub struct Foo(String);
+
 fn main() {
-	let foo = "  \t  hello \r \n  ";
-
-	let a = foo.trim();
-
-	println!("{foo}");
-	println!("{a}:{}", a.len())
+	let s = "hello".to_string();
+	let mut h = DefaultHasher::new();
 }
