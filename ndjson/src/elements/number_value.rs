@@ -9,13 +9,13 @@ pub enum Number {
 
 impl From<i128> for Number {
 	fn from(value: i128) -> Self {
-		todo!()
+		Number::Integer(value)
 	}
 }
 
 impl From<f64> for Number {
 	fn from(value: f64) -> Self {
-		todo!()
+		Number::Float(value)
 	}
 }
 
@@ -31,5 +31,22 @@ mod test_helper {
 		pub fn is_float(&self, expected: f64) {
 			assert!(matches!(self, Number::Float(value) if value == &expected));
 		}
+	}
+}
+
+#[cfg(test)]
+mod tests {
+	use super::*;
+	use super::test_helper;
+	#[test]
+	fn from_i128() {
+		let fixture = Number::from(42);
+		fixture.is_integer(42)
+	}
+
+	#[test]
+	fn from_f64() {
+		let fixture = Number::from(std::f64::consts::PI);
+		fixture.is_float(std::f64::consts::PI);
 	}
 }
