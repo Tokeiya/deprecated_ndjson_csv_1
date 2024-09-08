@@ -54,11 +54,10 @@ pub mod test_helper {
 	}
 }
 
-
 #[cfg(test)]
 mod test {
-	use super::*;
 	use super::test_helper;
+	use super::*;
 
 	#[test]
 	fn from_int_parse_error() {

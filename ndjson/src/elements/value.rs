@@ -7,13 +7,12 @@ use crate::elements::parse_number_error::ParseNumberError;
 use crate::elements::string_value::StringValue;
 use crate::elements::text_presentation::TextPresentation;
 use std::collections::HashMap;
-pub type Value = WithRawText<TypedValue>;
 pub type BooleanValue = WithRawText<bool>;
 
 pub type NumberValue = WithRawText<Result<Number, ParseNumberError>>;
 
 pub type ObjectValue = HashMap<StringValue, ObjectValueElement>;
-pub enum TypedValue {
+pub enum Value {
 	Boolean(BooleanValue),
 	Null(NullValue),
 	String(StringValue),
@@ -22,48 +21,88 @@ pub enum TypedValue {
 	Object(ObjectValue),
 }
 
-impl From<BooleanValue> for TypedValue {
+impl From<BooleanValue> for Value {
 	fn from(value: BooleanValue) -> Self {
 		todo!()
 	}
 }
 
-impl From<NullValue> for TypedValue {
+impl From<NullValue> for Value {
 	fn from(value: NullValue) -> Self {
 		todo!()
 	}
 }
 
-impl From<StringValue> for TypedValue {
+impl From<StringValue> for Value {
 	fn from(value: StringValue) -> Self {
 		todo!()
 	}
 }
 
-impl From<NumberValue> for TypedValue {
+impl From<NumberValue> for Value {
 	fn from(value: NumberValue) -> Self {
 		todo!()
 	}
 }
 
-impl From<ArrayValue> for TypedValue {
+impl From<ArrayValue> for Value {
 	fn from(value: ArrayValue) -> Self {
 		todo!()
 	}
 }
 
-impl From<ObjectValue> for TypedValue {
+impl From<ObjectValue> for Value {
 	fn from(value: ObjectValue) -> Self {
 		todo!()
 	}
 }
 
-impl TextPresentation for TypedValue {
-	fn raw_text(&self) -> &str {
+impl TextPresentation for Value {
+	fn raw(&self) -> &str {
 		todo!()
 	}
 
-	fn trimmed_text(&self) -> &str {
+	fn trimmed(&self) -> &str {
 		todo!()
+	}
+}
+
+#[cfg(test)]
+pub mod test_helper {
+	use super::*;
+
+	impl Value {
+		pub fn extract_bool(&self) -> &BooleanValue {
+			let Value::Boolean(b) = self else {
+				unreachable!()
+			};
+			b
+		}
+
+		pub fn extract_null(&self) -> &NullValue {
+			let Value::Null(n) = self else { unreachable!() };
+			n
+		}
+
+		pub fn extract_string(&self) -> &StringValue {
+			let Value::String(s) = self else {
+				unreachable!()
+			};
+			s
+		}
+
+		pub fn extract_number(&self) -> &NumberValue {
+			let Value::Number(n) = self else {
+				unreachable!()
+			};
+			n
+		}
+
+		pub fn extract_array(&self) -> &[Value] {
+			let Value::Array(a) = self else {
+				unreachable!()
+			};
+			a
+		}
 	}
 }

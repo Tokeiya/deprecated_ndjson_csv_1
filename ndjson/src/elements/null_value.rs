@@ -15,14 +15,13 @@ impl From<String> for NullValue {
 }
 
 impl TextPresentation for NullValue {
-	fn raw_text(&self) -> &str {
+	fn raw(&self) -> &str {
 		self.0.as_str()
 	}
-	fn trimmed_text(&self) -> &str {
+	fn trimmed(&self) -> &str {
 		"null"
 	}
 }
-
 
 #[cfg(test)]
 mod tests {

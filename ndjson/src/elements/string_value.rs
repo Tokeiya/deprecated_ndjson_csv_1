@@ -1,5 +1,5 @@
-use std::hash::{Hash, Hasher};
 use super::text_presentation::TextPresentation;
+use std::hash::{Hash, Hasher};
 pub struct StringValue(String);
 
 impl From<String> for StringValue {
@@ -16,18 +16,18 @@ impl From<&str> for StringValue {
 
 impl StringValue {
 	pub fn value(&self) -> &str {
-		let a = self.trimmed_text();
+		let a = self.trimmed();
 		println!("trim:{}", a);
 		a.trim_matches('"')
 	}
 }
 
 impl TextPresentation for StringValue {
-	fn raw_text(&self) -> &str {
+	fn raw(&self) -> &str {
 		self.0.as_str()
 	}
 
-	fn trimmed_text(&self) -> &str {
+	fn trimmed(&self) -> &str {
 		self.0.trim()
 	}
 }
@@ -40,10 +40,9 @@ impl Hash for StringValue {
 
 #[cfg(test)]
 mod test {
-	use std::hash::DefaultHasher;
-	use super::*;
 	use super::super::text_presentation::test_helper::*;
-
+	use super::*;
+	use std::hash::DefaultHasher;
 
 	#[test]
 	fn from_string() {

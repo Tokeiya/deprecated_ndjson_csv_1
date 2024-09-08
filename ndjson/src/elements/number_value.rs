@@ -36,8 +36,8 @@ mod test_helper {
 
 #[cfg(test)]
 mod tests {
-	use super::*;
 	use super::test_helper;
+	use super::*;
 	#[test]
 	fn from_i128() {
 		let fixture = Number::from(42);

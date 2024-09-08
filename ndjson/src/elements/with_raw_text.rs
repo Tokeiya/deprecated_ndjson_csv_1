@@ -16,11 +16,11 @@ impl<T> WithRawText<T> {
 }
 
 impl<T> TextPresentation for WithRawText<T> {
-	fn raw_text(&self) -> &str {
+	fn raw(&self) -> &str {
 		self.raw_text.as_str()
 	}
 
-	fn trimmed_text(&self) -> &str {
+	fn trimmed(&self) -> &str {
 		self.raw_text.trim()
 	}
 }
@@ -34,16 +34,15 @@ pub mod test_helper {
 			assert_eq!(self.raw_text, expected)
 		}
 		pub fn assert_trimmed(&self, expected: &str) {
-			assert_eq!(self.trimmed_text(), expected)
+			assert_eq!(self.trimmed(), expected)
 		}
 	}
 }
 
-
 #[cfg(test)]
 mod test {
-	use super::*;
 	use super::super::text_presentation::test_helper::*;
+	use super::*;
 
 	#[test]
 	fn from_string() {
