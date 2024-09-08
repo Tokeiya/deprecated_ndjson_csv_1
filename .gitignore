@@ -1,5 +1,6 @@
 /target
 /.venv
+/.idea
 
 
 coverage_prof/*
