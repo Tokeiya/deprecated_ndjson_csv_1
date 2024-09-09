@@ -15,11 +15,12 @@ impl From<String> for NullValue {
 }
 
 impl TextPresentation for NullValue {
-	fn raw(&self) -> &str {
-		self.0.as_str()
+	fn build_raw(&self, buffer: &mut String) {
+		todo!()
 	}
-	fn trimmed(&self) -> &str {
-		"null"
+
+	fn build_trimmed(&self, buffer: &mut String) {
+		todo!()
 	}
 }
 
@@ -46,6 +47,8 @@ mod tests {
 	fn text_presentation() {
 		let txt = add_spaces("null");
 		let act = NullValue::from(txt.as_str());
-		(&act as &dyn TextPresentation).assert_all(txt.as_str())
+		//assert_all(txt.as_str())
+		assert_raw(&act, &txt);
+		assert_trimmed(&act, "null");
 	}
 }

@@ -16,19 +16,17 @@ impl From<&str> for StringValue {
 
 impl StringValue {
 	pub fn value(&self) -> &str {
-		let a = self.trimmed();
-		println!("trim:{}", a);
-		a.trim_matches('"')
+		self.0.trim().trim_matches('"')
 	}
 }
 
 impl TextPresentation for StringValue {
-	fn raw(&self) -> &str {
-		self.0.as_str()
+	fn build_raw(&self, buffer: &mut String) {
+		todo!()
 	}
 
-	fn trimmed(&self) -> &str {
-		self.0.trim()
+	fn build_trimmed(&self, buffer: &mut String) {
+		todo!()
 	}
 }
 

@@ -16,12 +16,12 @@ impl<T> WithRawText<T> {
 }
 
 impl<T> TextPresentation for WithRawText<T> {
-	fn raw(&self) -> &str {
-		self.raw_text.as_str()
+	fn build_raw(&self, buffer: &mut String) {
+		todo!()
 	}
 
-	fn trimmed(&self) -> &str {
-		self.raw_text.trim()
+	fn build_trimmed(&self, buffer: &mut String) {
+		todo!()
 	}
 }
 

@@ -4,21 +4,21 @@ use std::vec::Vec;
 pub type ArrayValue = Vec<Value>;
 
 impl TextPresentation for ArrayValue {
-	fn raw(&self) -> &str {
+	fn build_raw(&self, buffer: &mut String) {
 		todo!()
 	}
 
-	fn trimmed(&self) -> &str {
+	fn build_trimmed(&self, buffer: &mut String) {
 		todo!()
 	}
 }
 
 impl TextPresentation for &[Value] {
-	fn raw(&self) -> &str {
+	fn build_raw(&self, buffer: &mut String) {
 		todo!()
 	}
 
-	fn trimmed(&self) -> &str {
+	fn build_trimmed(&self, buffer: &mut String) {
 		todo!()
 	}
 }
