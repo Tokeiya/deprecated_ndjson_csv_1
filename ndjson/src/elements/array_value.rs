@@ -9,7 +9,19 @@ pub struct ArrayValue {
 }
 
 impl ArrayValue {
-	pub fn new(content: Vec<Value>, left: String, right: String) {
+	pub fn new(content: Vec<Value>, left: String, right: String) -> Self {
+		todo!()
+	}
+
+	pub fn contents(&self) -> &[Value] {
+		todo!()
+	}
+
+	pub fn left(&self) -> &str {
+		todo!()
+	}
+
+	pub fn right(&self) -> &str {
 		todo!()
 	}
 }
@@ -26,18 +38,61 @@ impl TextPresentation for ArrayValue {
 
 #[cfg(test)]
 mod tests {
-	use super::super::number_value::test_helper as num_helper;
-	use super::super::value::test_helper as value_helper;
+	use super::super::number_value::from_i128;
+	use super::super::number_value::test_helper as num;
+	use super::super::string_value::StringValue;
 	use super::*;
-	use crate::elements::number_value::{Number, NumberValue};
+	use crate::elements::null_value::NullValue;
 	use crate::elements::value::{BooleanValue, Value};
+	#[test]
+	fn new() {
+		let mut vec = Vec::<Value>::new();
 
-	// #[test]
-	// fn new() {
-	// 	let mut vec = Vec::<Value>::new();
-	//
-	// 	let tmp= Value::Number(NumberValue::new(Number::from(42.195),"   42.195    ".to_string());
-	//
-	// 	vec.push(tmp);
-	// }
+		vec.push(Value::String(StringValue::from("hello world")));
+		vec.push(Value::Boolean(BooleanValue::new(true, "true".to_string())));
+		vec.push(Value::Null(NullValue::from("null")));
+		vec.push(Value::Number(from_i128(42, "42".to_string())));
+
+		let fixture = ArrayValue::new(
+			vec,
+			"     [         ".to_string(),
+			"    ]      ".to_string(),
+		);
+
+		assert_eq!(&fixture.left, "     [         ");
+		assert_eq!(&fixture.right, "    ]      ");
+
+		assert_eq!(fixture.content.len(), 4);
+		assert_eq!(fixture.content[0].extract_string().value(), "hello world");
+		assert_eq!(fixture.content[1].extract_bool().value(), &true);
+		_ = fixture.content[2].extract_null();
+		num::is_integer(fixture.content[3].extract_number(), 42);
+	}
+
+	#[test]
+	fn contents() {
+		let mut vec = Vec::<Value>::new();
+
+		vec.push(Value::String(StringValue::from("hello world")));
+		vec.push(Value::Boolean(BooleanValue::new(true, "true".to_string())));
+		vec.push(Value::Null(NullValue::from("null")));
+		vec.push(Value::Number(from_i128(42, "42".to_string())));
+
+		let fixture = ArrayValue::new(vec, "[".to_string(), "]".to_string());
+
+		let contents = fixture.contents();
+		assert_eq!(contents.len(), 4);
+		assert_eq!(contents[0].extract_string().value(), "hello world");
+		assert_eq!(contents[1].extract_bool().value(), &true);
+		_ = contents[2].extract_null();
+		num::is_integer(contents[3].extract_number(), 42);
+	}
+
+	#[test]
+	fn left_right() {
+		let fixture = ArrayValue::new(Vec::new(), "      [ ".to_string(), "]".to_string());
+
+		assert_eq!(fixture.left(), "      [ ");
+		assert_eq!(fixture.right(), "]");
+	}
 }
