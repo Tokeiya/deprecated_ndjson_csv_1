@@ -20,7 +20,7 @@ impl From<f64> for Number {
 }
 
 #[cfg(test)]
-mod test_helper {
+pub mod test_helper {
 	use super::*;
 
 	impl Number {

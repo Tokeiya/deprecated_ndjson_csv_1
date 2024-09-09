@@ -4,7 +4,6 @@ pub struct WithRawText<T> {
 	value: T,
 	raw_text: String,
 }
-
 impl<T> WithRawText<T> {
 	pub fn new(value: T, raw_text: String) -> Self {
 		Self { value, raw_text }
