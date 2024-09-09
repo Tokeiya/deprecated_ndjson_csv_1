@@ -3,7 +3,6 @@ use crate::elements::array_value::ArrayValue;
 use crate::elements::null_value::NullValue;
 use crate::elements::number_value::{Number, NumberValue};
 use crate::elements::object_value::ObjectValue;
-use crate::elements::parse_number_error::ParseNumberError;
 use crate::elements::string_value::StringValue;
 
 pub type BooleanValue = WithRawText<bool>;

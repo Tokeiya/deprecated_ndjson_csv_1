@@ -16,4 +16,16 @@ impl ObjectValue {
 	) -> Self {
 		todo!()
 	}
+
+	pub fn content(&self) -> &HashMap<StringValue, ObjectValueElement> {
+		todo!()
+	}
+
+	pub fn left(&self) -> &str {
+		todo!()
+	}
+
+	pub fn right(&self) -> &str {
+		todo!()
+	}
 }
