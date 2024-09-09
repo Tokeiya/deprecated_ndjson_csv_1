@@ -1,15 +1,13 @@
 use super::with_raw_text::WithRawText;
 use crate::elements::array_value::ArrayValue;
 use crate::elements::null_value::NullValue;
-use crate::elements::number_value::Number;
+use crate::elements::number_value::{Number, NumberValue};
 use crate::elements::object_value::ObjectValue;
 use crate::elements::parse_number_error::ParseNumberError;
 use crate::elements::string_value::StringValue;
 use crate::elements::text_presentation::TextPresentation;
 
 pub type BooleanValue = WithRawText<bool>;
-
-pub type NumberValue = WithRawText<Result<Number, ParseNumberError>>;
 
 pub enum Value {
 	Boolean(BooleanValue),

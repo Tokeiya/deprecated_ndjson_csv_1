@@ -23,3 +23,21 @@ impl TextPresentation for ArrayValue {
 		todo!()
 	}
 }
+
+#[cfg(test)]
+mod tests {
+	use super::super::number_value::test_helper as num_helper;
+	use super::super::value::test_helper as value_helper;
+	use super::*;
+	use crate::elements::number_value::{Number, NumberValue};
+	use crate::elements::value::{BooleanValue, Value};
+
+	// #[test]
+	// fn new() {
+	// 	let mut vec = Vec::<Value>::new();
+	//
+	// 	let tmp= Value::Number(NumberValue::new(Number::from(42.195),"   42.195    ".to_string());
+	//
+	// 	vec.push(tmp);
+	// }
+}
