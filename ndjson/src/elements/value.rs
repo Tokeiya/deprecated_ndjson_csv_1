@@ -5,7 +5,6 @@ use crate::elements::number_value::{Number, NumberValue};
 use crate::elements::object_value::ObjectValue;
 use crate::elements::parse_number_error::ParseNumberError;
 use crate::elements::string_value::StringValue;
-use crate::elements::text_presentation::TextPresentation;
 
 pub type BooleanValue = WithRawText<bool>;
 
@@ -50,16 +49,6 @@ impl From<ArrayValue> for Value {
 
 impl From<ObjectValue> for Value {
 	fn from(value: ObjectValue) -> Self {
-		todo!()
-	}
-}
-
-impl TextPresentation for Value {
-	fn build_raw(&self, buffer: &mut String) {
-		todo!()
-	}
-
-	fn build_trimmed(&self, buffer: &mut String) {
 		todo!()
 	}
 }
@@ -114,14 +103,10 @@ mod tests {
 	#[test]
 	fn bool() {
 		let value = Value::from(BooleanValue::new(true, "   true    ".to_string()));
-		assert_raw(&value, "   true    ");
-		assert_trimmed(&value, "true");
 
 		assert_eq!(value.extract_bool().value(), &true);
 
 		let value = Value::from(BooleanValue::new(false, "   false    ".to_string()));
-		assert_raw(&value, "   false    ");
-		assert_trimmed(&value, "false");
 
 		assert_eq!(value.extract_bool().value(), &false);
 	}
@@ -129,15 +114,11 @@ mod tests {
 	#[test]
 	fn null() {
 		let value = Value::from(NullValue::from("   null    ".to_string()));
-		assert_raw(&value, "   null    ");
-		assert_trimmed(&value, "null");
 	}
 
 	#[test]
 	fn string() {
 		let value = Value::from(StringValue::from("   \"hello\"    ".to_string()));
-		assert_raw(&value, "   \"hello\"    ");
-		assert_trimmed(&value, "\"hello\"");
 
 		assert_eq!(value.extract_string().value(), "hello");
 	}
@@ -148,8 +129,6 @@ mod tests {
 			Ok(Number::from(123)),
 			"   123    ".to_string(),
 		));
-		assert_raw(&value, "   123    ");
-		assert_trimmed(&value, "123");
 
 		let fixture = value.extract_number().value();
 		let Result::Ok(num) = fixture else {

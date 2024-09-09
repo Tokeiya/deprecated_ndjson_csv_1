@@ -1,5 +1,3 @@
-use super::text_presentation::TextPresentation;
-
 pub struct NullValue(String);
 
 impl From<&str> for NullValue {
@@ -14,13 +12,9 @@ impl From<String> for NullValue {
 	}
 }
 
-impl TextPresentation for NullValue {
-	fn build_raw(&self, buffer: &mut String) {
-		buffer.push_str(&self.0)
-	}
-
-	fn build_trimmed(&self, buffer: &mut String) {
-		buffer.push_str("null")
+impl NullValue {
+	pub fn raw_text(&self) -> &str {
+		todo!()
 	}
 }
 
@@ -41,14 +35,5 @@ mod tests {
 		let act = NullValue::from(txt.clone());
 
 		assert_eq!(act.0, txt)
-	}
-
-	#[test]
-	fn text_presentation() {
-		let txt = add_spaces("null");
-		let act = NullValue::from(txt.as_str());
-		//assert_all(txt.as_str())
-		assert_raw(&act, &txt);
-		assert_trimmed(&act, "null");
 	}
 }

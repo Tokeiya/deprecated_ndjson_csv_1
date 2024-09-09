@@ -1,4 +1,3 @@
-use super::text_presentation::TextPresentation;
 use std::hash::{Hash, Hasher};
 pub struct StringValue(String);
 
@@ -18,15 +17,9 @@ impl StringValue {
 	pub fn value(&self) -> &str {
 		self.0.trim().trim_matches('"')
 	}
-}
 
-impl TextPresentation for StringValue {
-	fn build_raw(&self, buffer: &mut String) {
-		buffer.push_str(&self.0)
-	}
-
-	fn build_trimmed(&self, buffer: &mut String) {
-		buffer.push_str(self.0.trim())
+	pub fn raw_text(&self) -> &str {
+		todo!()
 	}
 }
 
@@ -57,9 +50,6 @@ mod test {
 	fn text_presentation() {
 		let expected = add_spaces(r#""Hello,       World!""#);
 		let fixture = StringValue::from(expected.as_str());
-
-		assert_raw(&fixture, expected.as_str());
-		assert_trimmed(&fixture, r#""Hello,       World!""#);
 	}
 
 	#[test]

@@ -1,4 +1,3 @@
-use super::text_presentation::TextPresentation;
 use super::value::Value;
 use std::vec::Vec;
 
@@ -22,16 +21,6 @@ impl ArrayValue {
 	}
 
 	pub fn right(&self) -> &str {
-		todo!()
-	}
-}
-
-impl TextPresentation for ArrayValue {
-	fn build_raw(&self, buffer: &mut String) {
-		todo!()
-	}
-
-	fn build_trimmed(&self, buffer: &mut String) {
 		todo!()
 	}
 }

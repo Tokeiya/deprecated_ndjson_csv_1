@@ -90,9 +90,6 @@ mod tests {
 		let raw = text::add_spaces("42");
 		let fixture = from_i128(42, raw.clone());
 
-		text::assert_raw(&fixture, &raw);
-		text::assert_trimmed(&fixture, "42");
-
 		num::is_integer(&fixture, 42);
 	}
 
@@ -100,9 +97,6 @@ mod tests {
 	fn from_ext_f64() {
 		let raw = text::add_spaces("42.195");
 		let fixture = from_f64(42.195, raw.clone());
-
-		text::assert_raw(&fixture, &raw);
-		text::assert_trimmed(&fixture, "42.195");
 
 		num::is_float(&fixture, 42.195);
 	}
@@ -116,12 +110,6 @@ mod tests {
 		let raw = text::add_spaces("999999999999999999999999999999999999999999999999999");
 		let fixture = from_error(ParseNumberError::Integer(err), raw.clone());
 
-		text::assert_raw(&fixture, &raw);
-		text::assert_trimmed(
-			&fixture,
-			"999999999999999999999999999999999999999999999999999",
-		);
-
 		num::is_int_error(&fixture);
 	}
 
@@ -130,9 +118,6 @@ mod tests {
 		let err = "a".parse::<f64>().err().unwrap();
 		let raw = text::add_spaces("a");
 		let fixture = from_error(ParseNumberError::Float(err), raw.clone());
-
-		text::assert_raw(&fixture, &raw);
-		text::assert_trimmed(&fixture, "a");
 
 		num::is_float_error(&fixture);
 	}

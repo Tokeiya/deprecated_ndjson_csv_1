@@ -1,4 +1,3 @@
-use super::text_presentation::TextPresentation;
 use crate::elements::object_value_element::ObjectValueElement;
 use crate::elements::string_value::StringValue;
 use std::collections::HashMap;
@@ -15,16 +14,6 @@ impl ObjectValue {
 		left: String,
 		right: String,
 	) -> Self {
-		todo!()
-	}
-}
-
-impl TextPresentation for ObjectValue {
-	fn build_raw(&self, buffer: &mut String) {
-		todo!()
-	}
-
-	fn build_trimmed(&self, buffer: &mut String) {
 		todo!()
 	}
 }
