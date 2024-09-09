@@ -16,11 +16,11 @@ impl From<String> for NullValue {
 
 impl TextPresentation for NullValue {
 	fn build_raw(&self, buffer: &mut String) {
-		todo!()
+		buffer.push_str(&self.0)
 	}
 
 	fn build_trimmed(&self, buffer: &mut String) {
-		todo!()
+		buffer.push_str("null")
 	}
 }
 

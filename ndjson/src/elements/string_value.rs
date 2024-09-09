@@ -22,11 +22,11 @@ impl StringValue {
 
 impl TextPresentation for StringValue {
 	fn build_raw(&self, buffer: &mut String) {
-		todo!()
+		buffer.push_str(&self.0)
 	}
 
 	fn build_trimmed(&self, buffer: &mut String) {
-		todo!()
+		buffer.push_str(self.0.trim())
 	}
 }
 

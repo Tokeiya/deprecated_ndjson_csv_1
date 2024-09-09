@@ -1,11 +1,15 @@
 pub trait TextPresentation {
 	fn build_raw(&self, buffer: &mut String);
 	fn raw(&self) -> String {
-		todo!()
+		let mut buff = String::new();
+		self.build_raw(&mut buff);
+		buff
 	}
 	fn build_trimmed(&self, buffer: &mut String);
 	fn trimmed(&self) -> String {
-		todo!()
+		let mut buff = String::new();
+		self.build_trimmed(&mut buff);
+		buff
 	}
 }
 
@@ -50,8 +54,18 @@ mod test {
 	#[test]
 	fn raw() {
 		let mut mock = MockDummy::new();
-		mock.expect_build_trimmed().returning(|buff| {
-			buff.push_str("called")
-		});
+		mock.expect_build_raw()
+			.returning(|buff| buff.push_str("called"));
+
+		assert_eq!(mock.raw(), "called")
+	}
+
+	#[test]
+	fn trimmed() {
+		let mut mock = MockDummy::new();
+		mock.expect_build_trimmed()
+			.returning(|buff| buff.push_str("called"));
+
+		assert_eq!(mock.trimmed(), "called")
 	}
 }
