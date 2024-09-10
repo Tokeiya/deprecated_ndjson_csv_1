@@ -76,9 +76,10 @@ pub mod test_helper {
 
 #[cfg(test)]
 mod tests {
-	use super::super::text_presentation::test_helper as text;
+	use super::super::value::test_helper::add_spaces;
 	use super::test_helper as num;
 	use super::*;
+	use crate::elements::value;
 	#[test]
 	fn from_int_i128() {
 		let fixture = Number::from(42);
@@ -87,7 +88,7 @@ mod tests {
 
 	#[test]
 	fn from_ext_i128() {
-		let raw = text::add_spaces("42");
+		let raw = add_spaces("42");
 		let fixture = from_i128(42, raw.clone());
 
 		num::is_integer(&fixture, 42);
@@ -95,7 +96,7 @@ mod tests {
 
 	#[test]
 	fn from_ext_f64() {
-		let raw = text::add_spaces("42.195");
+		let raw = add_spaces("42.195");
 		let fixture = from_f64(42.195, raw.clone());
 
 		num::is_float(&fixture, 42.195);
@@ -107,7 +108,7 @@ mod tests {
 			.parse::<i128>()
 			.err()
 			.unwrap();
-		let raw = text::add_spaces("999999999999999999999999999999999999999999999999999");
+		let raw = add_spaces("999999999999999999999999999999999999999999999999999");
 		let fixture = from_error(ParseNumberError::Integer(err), raw.clone());
 
 		num::is_int_error(&fixture);
@@ -116,7 +117,7 @@ mod tests {
 	#[test]
 	fn from_float_error() {
 		let err = "a".parse::<f64>().err().unwrap();
-		let raw = text::add_spaces("a");
+		let raw = add_spaces("a");
 		let fixture = from_error(ParseNumberError::Float(err), raw.clone());
 
 		num::is_float_error(&fixture);

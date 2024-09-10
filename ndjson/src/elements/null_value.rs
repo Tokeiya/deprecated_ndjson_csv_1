@@ -20,8 +20,8 @@ impl NullValue {
 
 #[cfg(test)]
 mod tests {
-	use super::super::text_presentation::test_helper::*;
 	use super::*;
+	use crate::elements::value::test_helper::add_spaces;
 
 	#[test]
 	fn from_str() {

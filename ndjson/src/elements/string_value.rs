@@ -31,8 +31,8 @@ impl Hash for StringValue {
 
 #[cfg(test)]
 mod test {
-	use super::super::text_presentation::test_helper::*;
 	use super::*;
+	use crate::elements::value::test_helper::add_spaces;
 	use std::hash::DefaultHasher;
 
 	#[test]

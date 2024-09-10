@@ -56,6 +56,10 @@ impl From<ObjectValue> for Value {
 pub mod test_helper {
 	use super::*;
 
+	pub fn add_spaces(target: &str) -> String {
+		format!("\t \r  \t \n   {target}   \r\n")
+	}
+
 	impl Value {
 		pub fn extract_bool(&self) -> &BooleanValue {
 			let Value::Boolean(b) = self else {
@@ -94,9 +98,6 @@ pub mod test_helper {
 
 #[cfg(test)]
 mod tests {
-	use super::super::number_value::test_helper;
-	use super::super::text_presentation::test_helper::*;
-	use super::test_helper as num_helper;
 	use super::Value;
 	use super::*;
 	#[test]
@@ -152,3 +153,5 @@ mod tests {
 		todo!()
 	}
 }
+
+//todo:move to with_raw_text module.
