@@ -14,7 +14,7 @@ impl From<String> for NullValue {
 
 impl NullValue {
 	pub fn raw_text(&self) -> &str {
-		todo!()
+		&self.0
 	}
 }
 
@@ -35,5 +35,11 @@ mod tests {
 		let act = NullValue::from(txt.clone());
 
 		assert_eq!(act.0, txt)
+	}
+
+	#[test]
+	fn raw_text() {
+		let txt = NullValue::from("null");
+		assert_eq!(txt.raw_text(), "null")
 	}
 }

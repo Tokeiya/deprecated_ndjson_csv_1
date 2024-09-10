@@ -3,25 +3,29 @@ use std::vec::Vec;
 
 pub struct ArrayValue {
 	content: Vec<Value>,
-	left: String,
-	right: String,
+	begin: String,
+	end: String,
 }
 
 impl ArrayValue {
-	pub fn new(content: Vec<Value>, left: String, right: String) -> Self {
-		todo!()
+	pub fn new(content: Vec<Value>, begin: String, end: String) -> Self {
+		Self {
+			content,
+			begin,
+			end,
+		}
 	}
 
 	pub fn contents(&self) -> &[Value] {
-		todo!()
+		&self.content
 	}
 
-	pub fn left(&self) -> &str {
-		todo!()
+	pub fn beigin(&self) -> &str {
+		&self.begin
 	}
 
-	pub fn right(&self) -> &str {
-		todo!()
+	pub fn end(&self) -> &str {
+		&self.end
 	}
 }
 
@@ -48,8 +52,8 @@ mod tests {
 			"    ]      ".to_string(),
 		);
 
-		assert_eq!(&fixture.left, "     [         ");
-		assert_eq!(&fixture.right, "    ]      ");
+		assert_eq!(&fixture.begin, "     [         ");
+		assert_eq!(&fixture.end, "    ]      ");
 
 		assert_eq!(fixture.content.len(), 4);
 		assert_eq!(fixture.content[0].extract_string().value(), "hello world");
@@ -78,10 +82,10 @@ mod tests {
 	}
 
 	#[test]
-	fn left_right() {
+	fn begin_end() {
 		let fixture = ArrayValue::new(Vec::new(), "      [ ".to_string(), "]".to_string());
 
-		assert_eq!(fixture.left(), "      [ ");
-		assert_eq!(fixture.right(), "]");
+		assert_eq!(fixture.beigin(), "      [ ");
+		assert_eq!(fixture.end(), "]");
 	}
 }

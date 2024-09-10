@@ -19,7 +19,10 @@ impl StringValue {
 	}
 
 	pub fn raw_text(&self) -> &str {
-		todo!()
+		&self.0
+	}
+	pub fn as_key(&self) -> &str {
+		self.0.trim().trim_matches('"')
 	}
 }
 
@@ -28,6 +31,14 @@ impl Hash for StringValue {
 		self.value().hash(state)
 	}
 }
+
+impl PartialEq<Self> for StringValue {
+	fn eq(&self, other: &Self) -> bool {
+		self.as_key() == other.as_key()
+	}
+}
+
+impl Eq for StringValue {}
 
 #[cfg(test)]
 mod test {
@@ -67,5 +78,24 @@ mod test {
 		let mut expected = DefaultHasher::new();
 		"hello world!".hash(&mut expected);
 		assert_eq!(hasher.finish(), expected.finish())
+	}
+
+	#[test]
+	fn raw_text() {
+		let fixture = StringValue::from(r#"       "key   "           "#);
+		assert_eq!(fixture.raw_text(), &fixture.0)
+	}
+
+	#[test]
+	fn as_key() {
+		let fixture = StringValue::from(r#"       "key   "           "#);
+		assert_eq!(fixture.as_key(), r#"key   "#);
+	}
+
+	#[test]
+	fn eq() {
+		let a = StringValue::from(r#"     "key"        "#);
+		let b = StringValue::from(r#""key""#);
+		assert!(a == b)
 	}
 }

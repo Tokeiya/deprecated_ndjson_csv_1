@@ -40,6 +40,7 @@ pub mod test_helper {
 		let Ok(num) = actual.value() else {
 			unreachable!()
 		};
+
 		num.is_integer(expected)
 	}
 
