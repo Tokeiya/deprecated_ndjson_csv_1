@@ -95,7 +95,9 @@ pub mod test_helper {
 		}
 
 		pub fn extract_object(&self) -> &ObjectValue {
-			let Value::Object(obj) = self else { unreachable!() };
+			let Value::Object(obj) = self else {
+				unreachable!()
+			};
 			obj
 		}
 	}
@@ -103,11 +105,11 @@ pub mod test_helper {
 
 #[cfg(test)]
 mod tests {
-	use std::collections::HashMap;
-	use crate::elements::object_value_element::ObjectValueElement;
-	use crate::elements::number_value::Number;
 	use super::Value;
 	use super::*;
+	use crate::elements::number_value::Number;
+	use crate::elements::object_value_element::ObjectValueElement;
+	use std::collections::HashMap;
 	#[test]
 	fn bool() {
 		let value = Value::from(BooleanValue::new(true, "   true    ".to_string()));
@@ -176,8 +178,14 @@ mod tests {
 	#[test]
 	fn object() {
 		let mut map = HashMap::new();
-		map.insert(StringValue::from(r#""foo""#), ObjectValueElement::from(Value::from(StringValue::from(r#""hello world""#))));
-		map.insert(StringValue::from(r#""bar""#), ObjectValueElement::from(Value::from(NullValue::from("null"))));
+		map.insert(
+			StringValue::from(r#""foo""#),
+			ObjectValueElement::from(Value::from(StringValue::from(r#""hello world""#))),
+		);
+		map.insert(
+			StringValue::from(r#""bar""#),
+			ObjectValueElement::from(Value::from(NullValue::from("null"))),
+		);
 
 		let fixture = Value::from(ObjectValue::new(map, "{".to_string(), "}".to_string()));
 		_ = fixture.extract_object();

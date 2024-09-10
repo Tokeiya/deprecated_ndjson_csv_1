@@ -14,7 +14,11 @@ impl ObjectValue {
 		begin: String,
 		end: String,
 	) -> Self {
-		Self { content, begin, end }
+		Self {
+			content,
+			begin,
+			end,
+		}
 	}
 
 	pub fn content(&self) -> &HashMap<StringValue, ObjectValueElement> {
@@ -32,28 +36,32 @@ impl ObjectValue {
 
 #[cfg(test)]
 mod test {
-	use super::*;
-	use super::super::value::Value;
-	use super::super::number_value::{from_i128};
 	use super::super::null_value::NullValue;
-	use super::super::string_value::StringValue;
-	use std::collections::HashMap;
-	use super::super::object_value_element::ObjectValueElement;
+	use super::super::number_value::from_i128;
 	use super::super::number_value::test_helper as num_helper;
+	use super::super::object_value_element::ObjectValueElement;
+	use super::super::string_value::StringValue;
+	use super::super::value::Value;
+	use super::*;
+	use std::collections::HashMap;
 
 	#[test]
 	fn new() {
 		let mut map = HashMap::new();
-		map.insert(StringValue::from(r#""num""#), ObjectValueElement::from(Value::from(from_i128(42, "42".to_string()))));
-		map.insert(StringValue::from(r#"null"#), ObjectValueElement::from(Value::from(NullValue::from("null"))));
-
+		map.insert(
+			StringValue::from(r#""num""#),
+			ObjectValueElement::from(Value::from(from_i128(42, "42".to_string()))),
+		);
+		map.insert(
+			StringValue::from(r#"null"#),
+			ObjectValueElement::from(Value::from(NullValue::from("null"))),
+		);
 
 		let mut arr = Vec::new();
 		arr.push(Value::Number(from_i128(42, "42".to_string())));
 		arr.push(Value::Null(NullValue::from("null")));
 
 		map.insert(StringValue::from(r#"multi"#), ObjectValueElement::from(arr));
-
 
 		let fixture = ObjectValue::new(map, "{".to_string(), "}".to_string());
 
@@ -62,10 +70,16 @@ mod test {
 
 		assert_eq!(fixture.content.len(), 3);
 
-		num_helper::is_integer(fixture.content[&StringValue::from(r#""num""#)].extract_single()
-			                       .extract_number(), 42);
+		num_helper::is_integer(
+			fixture.content[&StringValue::from(r#""num""#)]
+				.extract_single()
+				.extract_number(),
+			42,
+		);
 
-		_ = &fixture.content[&StringValue::from(r#""null""#)].extract_single().extract_null();
+		_ = &fixture.content[&StringValue::from(r#""null""#)]
+			.extract_single()
+			.extract_null();
 
 		_ = &fixture.content[&StringValue::from(r#""multi""#)].extract_multi();
 	}
@@ -73,8 +87,14 @@ mod test {
 	#[test]
 	fn content() {
 		let mut map = HashMap::new();
-		map.insert(StringValue::from(r#""num""#), ObjectValueElement::from(Value::from(from_i128(42, "42".to_string()))));
-		map.insert(StringValue::from(r#"null"#), ObjectValueElement::from(Value::from(NullValue::from("null"))));
+		map.insert(
+			StringValue::from(r#""num""#),
+			ObjectValueElement::from(Value::from(from_i128(42, "42".to_string()))),
+		);
+		map.insert(
+			StringValue::from(r#"null"#),
+			ObjectValueElement::from(Value::from(NullValue::from("null"))),
+		);
 
 		let mut arr = Vec::new();
 		arr.push(Value::Number(from_i128(42, "42".to_string())));
@@ -85,8 +105,12 @@ mod test {
 		let fixture = ObjectValue::new(map, "{".to_string(), "}".to_string());
 
 		assert_eq!(fixture.content().len(), 3);
-		_ = fixture.content()[&StringValue::from(r#""num""#)].extract_single().extract_number();
-		_ = fixture.content()[&StringValue::from(r#""null""#)].extract_single().extract_null();
+		_ = fixture.content()[&StringValue::from(r#""num""#)]
+			.extract_single()
+			.extract_number();
+		_ = fixture.content()[&StringValue::from(r#""null""#)]
+			.extract_single()
+			.extract_null();
 		_ = fixture.content()[&StringValue::from(r#""multi""#)].extract_multi();
 	}
 

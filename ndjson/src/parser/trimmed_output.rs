@@ -61,14 +61,33 @@ impl TrimmedOutput {
 	}
 }
 
-
 #[cfg(test)]
-mod test {
+pub mod test_helper {
 	use super::*;
 	use std::sync::LazyLock;
 
-	static WS: LazyLock<String> = LazyLock::new(|| "\u{20}\u{09}\u{0A}\u{0D}".to_string());
+	pub static WS: LazyLock<String> = LazyLock::new(|| "\u{20}\u{09}\u{0A}\u{0D}".to_string());
+	pub fn assert(actual: &(TrimmedOutput, &str), rem: Option<&str>, raw: &str) {
+		if let Some(r) = rem {
+			assert_eq!(actual.1, r)
+		} else {
+			assert_eq!(actual.1, "")
+		}
 
+		let exp = TrimmedOutput::new(raw.to_string());
+
+		let tmp = &actual.0;
+		assert_eq!(tmp.raw(), raw);
+		assert_eq!(tmp.trimmed(), exp.trimmed());
+		assert_eq!(tmp.left(), exp.left());
+		assert_eq!(tmp.right(), exp.right());
+	}
+}
+
+#[cfg(test)]
+mod test {
+	use super::test_helper::WS;
+	use super::*;
 
 	#[test]
 	fn new() {
@@ -157,4 +176,3 @@ mod test {
 		assert_eq!(fixture.right(), "");
 	}
 }
-

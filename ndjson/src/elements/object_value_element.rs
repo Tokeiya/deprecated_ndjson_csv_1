@@ -23,12 +23,16 @@ pub mod test_helper {
 
 	impl ObjectValueElement {
 		pub fn extract_single(&self) -> &Value {
-			let ObjectValueElement::Single(v) = self else { unreachable!() };
+			let ObjectValueElement::Single(v) = self else {
+				unreachable!()
+			};
 			v
 		}
 
 		pub fn extract_multi(&self) -> &[Value] {
-			let ObjectValueElement::Many(v) = self else { unreachable!() };
+			let ObjectValueElement::Many(v) = self else {
+				unreachable!()
+			};
 			v
 		}
 	}
