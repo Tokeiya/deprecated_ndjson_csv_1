@@ -1,7 +1,7 @@
 use super::with_raw_text::WithRawText;
 use crate::elements::array_value::ArrayValue;
 use crate::elements::null_value::NullValue;
-use crate::elements::number_value::{Number, NumberValue};
+use crate::elements::number_value::NumberValue;
 use crate::elements::object_value::ObjectValue;
 use crate::elements::string_value::StringValue;
 
@@ -105,6 +105,7 @@ pub mod test_helper {
 mod tests {
 	use std::collections::HashMap;
 	use crate::elements::object_value_element::ObjectValueElement;
+	use crate::elements::number_value::Number;
 	use super::Value;
 	use super::*;
 	#[test]
@@ -121,6 +122,7 @@ mod tests {
 	#[test]
 	fn null() {
 		let value = Value::from(NullValue::from("   null    ".to_string()));
+		_ = value.extract_null();
 	}
 
 	#[test]

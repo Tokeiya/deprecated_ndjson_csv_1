@@ -12,7 +12,7 @@ impl<T> WithRawText<T> {
 	}
 
 	pub fn raw_text(&self) -> &str {
-		todo!()
+		&self.raw_text
 	}
 }
 
@@ -29,7 +29,6 @@ pub mod test_helper {
 
 #[cfg(test)]
 mod test {
-	use super::super::text_presentation::test_helper::*;
 	use super::*;
 
 	#[test]
@@ -43,5 +42,13 @@ mod test {
 	fn value() {
 		let fixture = WithRawText::new(20, 20.to_string());
 		assert_eq!(fixture.value(), &20);
+	}
+
+	#[test]
+	fn raw_text() {
+		let fixture = WithRawText::new(20, 20.to_string());
+		assert_eq!(fixture.value(), &20);
+
+		assert_eq!(fixture.raw_text(), "20");
 	}
 }

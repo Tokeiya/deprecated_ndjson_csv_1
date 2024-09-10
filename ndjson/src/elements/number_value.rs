@@ -80,7 +80,6 @@ mod tests {
 	use super::super::value::test_helper::add_spaces;
 	use super::test_helper as num;
 	use super::*;
-	use crate::elements::value;
 	#[test]
 	fn from_int_i128() {
 		let fixture = Number::from(42);

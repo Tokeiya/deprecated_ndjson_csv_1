@@ -43,7 +43,6 @@ impl Eq for StringValue {}
 #[cfg(test)]
 mod test {
 	use super::*;
-	use crate::elements::value::test_helper::add_spaces;
 	use std::hash::DefaultHasher;
 
 	#[test]
@@ -55,12 +54,6 @@ mod test {
 	fn from_str() {
 		let fixture = StringValue::from(r#""Hello, World!""#);
 		assert_eq!(fixture.value(), r#"Hello, World!"#);
-	}
-
-	#[test]
-	fn text_presentation() {
-		let expected = add_spaces(r#""Hello,       World!""#);
-		let fixture = StringValue::from(expected.as_str());
 	}
 
 	#[test]

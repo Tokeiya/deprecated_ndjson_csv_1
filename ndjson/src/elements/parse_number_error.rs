@@ -56,7 +56,6 @@ pub mod test_helper {
 
 #[cfg(test)]
 mod test {
-	use super::test_helper;
 	use super::*;
 
 	#[test]

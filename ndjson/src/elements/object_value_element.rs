@@ -1,6 +1,4 @@
-use super::string_value::StringValue;
 use super::value::Value;
-use std::collections::HashMap;
 
 pub enum ObjectValueElement {
 	Single(Value),
@@ -38,10 +36,10 @@ pub mod test_helper {
 
 #[cfg(test)]
 mod test {
-	use crate::elements::null_value::NullValue;
-	use super::*;
 	use super::super::number_value as num;
 	use super::super::number_value::test_helper as num_helper;
+	use super::*;
+	use crate::elements::null_value::NullValue;
 
 	#[test]
 	fn from_single() {
