@@ -67,6 +67,11 @@ pub mod test_helper {
 	use std::sync::LazyLock;
 
 	pub static WS: LazyLock<String> = LazyLock::new(|| "\u{20}\u{09}\u{0A}\u{0D}".to_string());
+
+	pub fn add_ws(value: &str) -> String {
+		format!("{}{value}{}", WS.as_str(), WS.as_str())
+	}
+
 	pub fn assert(actual: &(TrimmedOutput, &str), rem: Option<&str>, raw: &str) {
 		if let Some(r) = rem {
 			assert_eq!(actual.1, r)

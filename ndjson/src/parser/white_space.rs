@@ -18,7 +18,6 @@ pub fn ws<I: Stream<Token=char>>() -> impl Parser<I, Output=String> {
 	cmb::many::<String, I, _>(tmp)
 }
 
-
 pub fn trim_left<I: Stream<Token=char>>(
 	parser: impl Parser<I, Output=String>,
 ) -> impl Parser<I, Output=TrimmedOutput> {
