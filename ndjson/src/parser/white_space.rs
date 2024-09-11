@@ -13,28 +13,28 @@ pub fn is_ws(c: &char) -> bool {
 	}
 }
 
-pub fn ws<I: Stream<Token = char>>() -> impl Parser<I, Output = String> {
+pub fn ws<I: Stream<Token=char>>() -> impl Parser<I, Output=String> {
 	let tmp = cmb::satisfy::<I, _>(|c| is_ws(&c));
 	cmb::many::<String, I, _>(tmp)
 }
 
-pub fn trim_left<I: Stream<Token = char>>(
-	parser: impl Parser<I, Output = String>,
-) -> impl Parser<I, Output = TrimmedOutput> {
-	(ws(), parser).map(|(w, p)| TrimmedOutput::new(format!("{w}{p}")))
-}
-
-pub fn trim_right<I: Stream<Token = char>>(
-	parser: impl Parser<I, Output = String>,
-) -> impl Parser<I, Output = TrimmedOutput> {
-	(parser, ws()).map(|(p, w)| TrimmedOutput::new(format!("{p}{w}")))
-}
-
-pub fn trim<I: Stream<Token = char>>(
-	parser: impl Parser<I, Output = String>,
-) -> impl Parser<I, Output = TrimmedOutput> {
-	(ws(), parser, ws()).map(|(l, v, r)| TrimmedOutput::new(format!("{}{}{}", l, v, r)))
-}
+// pub fn trim_left<I: Stream<Token = char>>(
+// 	parser: impl Parser<I, Output = String>,
+// ) -> impl Parser<I, Output = TrimmedOutput> {
+// 	(ws(), parser).map(|(w, p)| TrimmedOutput::new(format!("{w}{p}")))
+// }
+//
+// pub fn trim_right<I: Stream<Token = char>>(
+// 	parser: impl Parser<I, Output = String>,
+// ) -> impl Parser<I, Output = TrimmedOutput> {
+// 	(parser, ws()).map(|(p, w)| TrimmedOutput::new(format!("{p}{w}")))
+// }
+//
+// pub fn trim<I: Stream<Token = char>>(
+// 	parser: impl Parser<I, Output = String>,
+// ) -> impl Parser<I, Output = TrimmedOutput> {
+// 	(ws(), parser, ws()).map(|(l, v, r)| TrimmedOutput::new(format!("{}{}{}", l, v, r)))
+// }
 
 #[cfg(test)]
 mod test {
@@ -56,41 +56,41 @@ mod test {
 		assert_eq!(r, "aaa");
 	}
 
-	#[test]
-	fn trim_left() {
-		let input = format!("{}value{}", WS.as_str(), WS.as_str());
-		let p = chr::string::<&str>("value").map(|x| x.to_string());
-		let mut p = super::trim_left(p);
-		let fixture = p.parse(input.as_str()).unwrap();
-
-		let (f, r) = p.parse(input.as_str()).unwrap();
-
-		assert(&fixture, Some(&WS), &format!("{}value", WS.as_str()));
-	}
-
-	#[test]
-	fn trim_right() {
-		let input = format!("{}value{}", WS.as_str(), WS.as_str());
-		let p = chr::string::<&str>("value").map(|x| x.to_string());
-		let mut p = super::trim_right(p);
-
-		assert!(p.parse(&input).is_err());
-
-		let input = format!("value{}", WS.as_str());
-
-		let p = chr::string::<&str>("value").map(|x| x.to_string());
-		let mut p = super::trim_right(p);
-
-		let fixture = p.parse(&input).unwrap();
-		assert(&fixture, None, &input);
-	}
-
-	#[test]
-	fn trim() {
-		let input = format!("{}{}value{}", WS.as_str(), WS.as_str(), WS.as_str());
-		let p = chr::string::<&str>("value").map(|x| x.to_string());
-		let mut p = super::trim(p);
-		let fixture = p.parse(input.as_str()).unwrap();
-		assert(&fixture, None, &input);
-	}
+	// #[test]
+	// fn trim_left() {
+	// 	let input = format!("{}value{}", WS.as_str(), WS.as_str());
+	// 	let p = chr::string::<&str>("value").map(|x| x.to_string());
+	// 	let mut p = super::trim_left(p);
+	// 	let fixture = p.parse(input.as_str()).unwrap();
+	//
+	// 	let (f, r) = p.parse(input.as_str()).unwrap();
+	//
+	// 	assert(&fixture, Some(&WS), &format!("{}value", WS.as_str()));
+	// }
+	//
+	// #[test]
+	// fn trim_right() {
+	// 	let input = format!("{}value{}", WS.as_str(), WS.as_str());
+	// 	let p = chr::string::<&str>("value").map(|x| x.to_string());
+	// 	let mut p = super::trim_right(p);
+	//
+	// 	assert!(p.parse(&input).is_err());
+	//
+	// 	let input = format!("value{}", WS.as_str());
+	//
+	// 	let p = chr::string::<&str>("value").map(|x| x.to_string());
+	// 	let mut p = super::trim_right(p);
+	//
+	// 	let fixture = p.parse(&input).unwrap();
+	// 	assert(&fixture, None, &input);
+	// }
+	//
+	// #[test]
+	// fn trim() {
+	// 	let input = format!("{}{}value{}", WS.as_str(), WS.as_str(), WS.as_str());
+	// 	let p = chr::string::<&str>("value").map(|x| x.to_string());
+	// 	let mut p = super::trim(p);
+	// 	let fixture = p.parse(input.as_str()).unwrap();
+	// 	assert(&fixture, None, &input);
+	// }
 }
