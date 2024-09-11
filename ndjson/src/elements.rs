@@ -15,5 +15,4 @@ pub use object_value::ObjectValue;
 pub use object_value_element::ObjectValueElement;
 pub use parse_number_error::ParseNumberError;
 pub use string_value::StringValue;
-pub use value::{Value, BooleanValue};
-
+pub use value::{BooleanValue, Value};
