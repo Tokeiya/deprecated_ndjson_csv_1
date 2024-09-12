@@ -4,8 +4,65 @@ use combine as cmb;
 use combine::parser::char as chr;
 use combine::{Parser, Stream};
 
+/*
+	 string = quotation-mark *char quotation-mark
+
+	 char = unescaped /
+		 escape (
+			 %x22 /          ; "    quotation mark  U+0022
+			 %x5C /          ; \    reverse solidus U+005C
+			 %x2F /          ; /    solidus         U+002F
+			 %x62 /          ; b    backspace       U+0008
+			 %x66 /          ; f    form feed       U+000C
+			 %x6E /          ; n    line feed       U+000A
+			 %x72 /          ; r    carriage return U+000D
+			 %x74 /          ; t    tab             U+0009
+			 %x75 4HEXDIG )  ; uXXXX                U+XXXX
+
+	 escape = %x5C              ; \
+
+	 quotation-mark = %x22      ; "
+
+	 unescaped = %x20-21 / %x23-5B / %x5D-10FFFF
+*/
 fn escape<I: Stream<Token = char>>() -> impl Parser<I, Output = WithRawText<char>> {
-	chr::char::<I>('a').map(|_| todo!())
+	let tmp = cmb::satisfy::<I, _>(|c| match c {
+		'"' => true,
+		'\\' => true,
+		'/' => true,
+		'b' => true,
+		'f' => true,
+		'n' => true,
+		'r' => true,
+		't' => true,
+		_ => false,
+	})
+	.map(|c| match c {
+		'"' => '"',
+		'\\' => '\\',
+		'/' => '/',
+		'b' => '\u{0008}',
+		'f' => '\u{000C}',
+		'n' => '\n',
+		'r' => '\r',
+		't' => '\t',
+		_ => unreachable!(),
+	});
+
+	let esc = chr::char('\\')
+		.and(tmp)
+		.map(|(a, b)| WithRawText::new(b, format!("\\{a}")));
+
+	let unicode =
+		cmb::parser::repeat::count_min_max::<String, I, _>(4, 4, chr::hex_digit()).map(|str| {
+			let code_point = u32::from_str_radix(&str, 16).unwrap();
+			WithRawText::new(std::char::from_u32(code_point).unwrap(), str)
+		});
+
+	let unicode = (chr::string::<I>(r#"\u"#), unicode)
+		.map(|(a, b)| WithRawText::new(*b.value(), format!("{a}{}", b.raw_text())));
+
+	esc.or(unicode)
 }
 
 fn unescaped<I: Stream<Token = char>>() -> impl Parser<I, Output = char> {
@@ -146,6 +203,11 @@ mod test {
 		let input = add_ws(r#""   hello\tworld   \r\n""#);
 		let mut parser = super::string::<&str>();
 		assert_value(parser.parse(&input), "   hello\tworld   \r\n", &input);
+
+		//err
+		let mut parser = super::string::<&str>();
+		assert!(parser.parse(r#""\u006""#).is_err());
+		assert!(parser.parse(r#""\a""#).is_err());
 	}
 	#[test]
 	fn escape() {
