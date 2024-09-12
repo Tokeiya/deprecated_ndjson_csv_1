@@ -4,27 +4,6 @@ use combine as cmb;
 use combine::parser::char as chr;
 use combine::{Parser, Stream};
 
-/*
-	 string = quotation-mark *char quotation-mark
-
-	 char = unescaped /
-		 escape (
-			 %x22 /          ; "    quotation mark  U+0022
-			 %x5C /          ; \    reverse solidus U+005C
-			 %x2F /          ; /    solidus         U+002F
-			 %x62 /          ; b    backspace       U+0008
-			 %x66 /          ; f    form feed       U+000C
-			 %x6E /          ; n    line feed       U+000A
-			 %x72 /          ; r    carriage return U+000D
-			 %x74 /          ; t    tab             U+0009
-			 %x75 4HEXDIG )  ; uXXXX                U+XXXX
-
-	 escape = %x5C              ; \
-
-	 quotation-mark = %x22      ; "
-
-	 unescaped = %x20-21 / %x23-5B / %x5D-10FFFF
-*/
 fn escape<I: Stream<Token = char>>() -> impl Parser<I, Output = WithRawText<char>> {
 	let tmp = cmb::satisfy::<I, _>(|c| match c {
 		'"' => true,
