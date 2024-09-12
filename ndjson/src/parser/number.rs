@@ -11,25 +11,24 @@ enum Output {
 	String(String),
 }
 
+fn int_string_parser<I: Stream<Token = char>>() -> impl Parser<I, Output = String> {
+	let zero = chr::char::<I>('0')
+		.skip(cmb::not_followed_by(chr::digit()))
+		.map(|c| c.to_string());
 
-fn int_string_parser<I: Stream<Token=char>>() -> impl Parser<I, Output=String> {
-	let zero = chr::char::<I>('0').skip(cmb::not_followed_by(chr::digit())).map(|c| c.to_string());
-
-
-	let one_nine = cmb::satisfy::<I, _>(|c| {
-		match c {
-			'1' => true,
-			'2' => true,
-			'3' => true,
-			'4' => true,
-			'5' => true,
-			'6' => true,
-			'7' => true,
-			'8' => true,
-			'9' => true,
-			_ => false
-		}
-	}).map(|c| Output::Char(c));
+	let one_nine = cmb::satisfy::<I, _>(|c| match c {
+		'1' => true,
+		'2' => true,
+		'3' => true,
+		'4' => true,
+		'5' => true,
+		'6' => true,
+		'7' => true,
+		'8' => true,
+		'9' => true,
+		_ => false,
+	})
+	.map(|c| Output::Char(c));
 
 	let digits = cmb::many::<String, I, _>(chr::digit()).map(|s| Output::String(s));
 
@@ -42,25 +41,27 @@ fn int_string_parser<I: Stream<Token=char>>() -> impl Parser<I, Output=String> {
 		buff
 	});
 
-	let signed = (cmb::optional::<I, _>(chr::char('-')), zero.or(multi))
-		.map(|(s, v)| {
-			let mut buff = if let Some(c) = s {
-				c.to_string()
-			} else {
-				"".to_string()
-			};
+	let signed = (cmb::optional::<I, _>(chr::char('-')), zero.or(multi)).map(|(s, v)| {
+		let mut buff = if let Some(c) = s {
+			c.to_string()
+		} else {
+			"".to_string()
+		};
 
-			buff.push_str(&v);
-			buff
-		});
+		buff.push_str(&v);
+		buff
+	});
 
 	signed
 }
 
-pub fn number<I: Stream<Token=char>>() -> impl Parser<I, Output=Value> {
+pub fn number<I: Stream<Token = char>>() -> impl Parser<I, Output = Value> {
 	let integer = int_string_parser::<I>();
 
-	let frac = (chr::char::<I>('.'), cmb::many1::<String, I, _>(chr::digit()))
+	let frac = (
+		chr::char::<I>('.'),
+		cmb::many1::<String, I, _>(chr::digit()),
+	)
 		.map(|(_, v)| {
 			let mut buff = ".".to_string();
 			buff.push_str(&v);
@@ -70,7 +71,11 @@ pub fn number<I: Stream<Token=char>>() -> impl Parser<I, Output=Value> {
 	let sign = chr::char::<I>('-').or(chr::char('+'));
 	let exp_sign = chr::char::<I>('e').or(chr::char('E'));
 
-	let exp = (exp_sign, cmb::optional(sign), cmb::many1::<String, I, _>(chr::digit()))
+	let exp = (
+		exp_sign,
+		cmb::optional(sign),
+		cmb::many1::<String, I, _>(chr::digit()),
+	)
 		.map(|(e, s, v)| {
 			let mut buff = e.to_string();
 
@@ -82,51 +87,55 @@ pub fn number<I: Stream<Token=char>>() -> impl Parser<I, Output=Value> {
 			buff
 		});
 
-	(ws(), cmb::optional(chr::char('-')),
-	 integer,
-	 cmb::optional(frac),
-	 cmb::optional(exp),
-	 ws()).map(|(l, s, i, f, e, r)| {
-		let mut buff = String::from(l);
+	(
+		ws(),
+		cmb::optional(chr::char('-')),
+		integer,
+		cmb::optional(frac),
+		cmb::optional(exp),
+		ws(),
+	)
+		.map(|(l, s, i, f, e, r)| {
+			let mut buff = String::from(l);
 
-		if let Some(s) = s {
-			buff.push(s);
-		};
+			if let Some(s) = s {
+				buff.push(s);
+			};
 
-		buff.push_str(&i);
+			buff.push_str(&i);
 
-		let mut flg = false;
+			let mut flg = false;
 
-		if let Some(f) = f {
-			flg = true;
-			buff.push_str(&f);
-		};
+			if let Some(f) = f {
+				flg = true;
+				buff.push_str(&f);
+			};
 
-		if let Some(e) = e {
-			flg = true;
-			buff.push_str(&e);
-		};
+			if let Some(e) = e {
+				flg = true;
+				buff.push_str(&e);
+			};
 
-		buff.push_str(&r);
+			buff.push_str(&r);
 
-		let num = if flg {
-			let value = buff.trim().parse::<f64>();
+			let num = if flg {
+				let value = buff.trim().parse::<f64>();
 
-			match value {
-				Ok(num) => from_f64(num, buff),
-				Err(err) => from_error(ParseNumberError::Float(err), buff)
-			}
-		} else {
-			let value = buff.trim().parse::<i128>();
+				match value {
+					Ok(num) => from_f64(num, buff),
+					Err(err) => from_error(ParseNumberError::Float(err), buff),
+				}
+			} else {
+				let value = buff.trim().parse::<i128>();
 
-			match value {
-				Ok(num) => from_i128(num, buff),
-				Err(err) => from_error(ParseNumberError::Integer(err), buff)
-			}
-		};
+				match value {
+					Ok(num) => from_i128(num, buff),
+					Err(err) => from_error(ParseNumberError::Integer(err), buff),
+				}
+			};
 
-		Value::from(num)
-	})
+			Value::from(num)
+		})
 }
 
 #[cfg(test)]
@@ -167,7 +176,10 @@ mod tests {
 		}
 
 		assert_f("1.0", 1.0);
-		assert_f(&add_ws(&std::f64::consts::PI.to_string()), std::f64::consts::PI);
+		assert_f(
+			&add_ws(&std::f64::consts::PI.to_string()),
+			std::f64::consts::PI,
+		);
 
 		assert_f("-2.25", -2.25);
 		assert_f("15.255e42", 15.255e42);
@@ -176,9 +188,20 @@ mod tests {
 		assert_f("15.255E-42", 15.255E-42);
 		assert_f("-15.255e42", -15.255e42);
 		assert_f("-15.255E42", -15.255E42);
+		assert_f(&add_ws("-15.255E42"), -15.255E42);
 
-		assert_i(&add_ws("170141183460469231731687303715884105727"), 170141183460469231731687303715884105727);
-		assert_i("-170141183460469231731687303715884105728", -170141183460469231731687303715884105728);
+		assert_i(
+			&add_ws("170141183460469231731687303715884105727"),
+			170141183460469231731687303715884105727,
+		);
+		assert_i(
+			"-170141183460469231731687303715884105728",
+			-170141183460469231731687303715884105728,
+		);
+
+		assert_i(&add_ws("42"), 42);
+		assert_i(&add_ws("0"), 0);
+		assert_i(&add_ws("-42"), -42);
 
 		assert_parse_err("00");
 		assert_parse_err("01");
