@@ -1,10 +1,10 @@
+use crate::text_presentation::TextPresentation;
+use combine as cmb;
+use combine::parser::char as chr;
+use combine::{Parser, Stream};
 use std::collections::HashMap;
 use std::hash::{BuildHasher, DefaultHasher, Hash, Hasher};
 use std::net::ToSocketAddrs;
-use combine as cmb;
-use combine::{Parser, Stream};
-use combine::parser::char as chr;
-use crate::text_presentation::TextPresentation;
 
 mod poc;
 mod sample;
@@ -12,20 +12,19 @@ mod text_presentation;
 
 pub struct Foo(String);
 
-
-fn zero<I: Stream<Token=char>>() -> impl Parser<I, Output=TextPresentation> {
+fn zero<I: Stream<Token = char>>() -> impl Parser<I, Output = TextPresentation> {
 	chr::char('0').map(TextPresentation::from)
 }
 
-fn plus<I: Stream<Token=char>>() -> impl Parser<I, Output=TextPresentation> {
+fn plus<I: Stream<Token = char>>() -> impl Parser<I, Output = TextPresentation> {
 	chr::char('+').map(TextPresentation::from)
 }
 
-fn minus<I: Stream<Token=char>>() -> impl Parser<I, Output=TextPresentation> {
+fn minus<I: Stream<Token = char>>() -> impl Parser<I, Output = TextPresentation> {
 	chr::char('-').map(TextPresentation::from)
 }
 
-fn integer<I: Stream<Token=char>>() -> impl Parser<I, Output=TextPresentation> {
+fn integer<I: Stream<Token = char>>() -> impl Parser<I, Output = TextPresentation> {
 	let tmp = (
 		digit1_9(),
 		cmb::many::<String, I, _>(chr::digit()).map(TextPresentation::from),
@@ -39,7 +38,7 @@ fn integer<I: Stream<Token=char>>() -> impl Parser<I, Output=TextPresentation> {
 	zero().or(tmp)
 }
 
-fn frac<I: Stream<Token=char>>() -> impl Parser<I, Output=TextPresentation> {
+fn frac<I: Stream<Token = char>>() -> impl Parser<I, Output = TextPresentation> {
 	(
 		chr::char::<I>('.'),
 		cmb::many1::<String, I, _>(chr::digit()),
@@ -51,7 +50,7 @@ fn frac<I: Stream<Token=char>>() -> impl Parser<I, Output=TextPresentation> {
 		})
 }
 
-fn exponent<I: Stream<Token=char>>() -> impl Parser<I, Output=TextPresentation> {
+fn exponent<I: Stream<Token = char>>() -> impl Parser<I, Output = TextPresentation> {
 	let e_sign = chr::char::<I>('e').or(chr::char::<I>('E'));
 	let opt_sign = cmb::optional(plus::<I>().or(minus::<I>()))
 		.map(|c| c.unwrap_or_else(|| TextPresentation::Empty));
@@ -66,7 +65,7 @@ fn exponent<I: Stream<Token=char>>() -> impl Parser<I, Output=TextPresentation> 
 	})
 }
 
-fn digit1_9<I: Stream<Token=char>>() -> impl Parser<I, Output=TextPresentation> {
+fn digit1_9<I: Stream<Token = char>>() -> impl Parser<I, Output = TextPresentation> {
 	cmb::satisfy(|c| match c {
 		'1' => true,
 		'2' => true,
@@ -79,10 +78,10 @@ fn digit1_9<I: Stream<Token=char>>() -> impl Parser<I, Output=TextPresentation> 
 		'9' => true,
 		_ => false,
 	})
-		.map(TextPresentation::from)
+	.map(TextPresentation::from)
 }
 
-fn number_str<I: Stream<Token=char>>() -> impl Parser<I, Output=(TextPresentation, bool)> {
+fn number_str<I: Stream<Token = char>>() -> impl Parser<I, Output = (TextPresentation, bool)> {
 	let opt_minus = cmb::optional(minus()).map(|c| c.unwrap_or_else(|| TextPresentation::Empty));
 	let opt_frac = cmb::optional(frac()).map(|c| c.unwrap_or_else(|| TextPresentation::Empty));
 	let opt_exp = cmb::optional(exponent()).map(|c| c.unwrap_or_else(|| TextPresentation::Empty));
