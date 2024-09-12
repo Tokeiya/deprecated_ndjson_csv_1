@@ -211,7 +211,7 @@ mod test {
 		assert!(parser.parse(r#"\u"#).is_err());
 		assert!(parser.parse(r#"\u61"#).is_err());
 		assert!(parser.parse(r#"\u061"#).is_err());
-	
+
 		let (act, rem) = parser.parse(r#"\u00611"#).unwrap();
 		assert_eq!(act.value(), &'a');
 		assert_eq!(rem, "1");
