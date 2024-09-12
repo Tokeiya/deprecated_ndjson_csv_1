@@ -37,21 +37,21 @@ fn escape<I: Stream<Token = char>>() -> impl Parser<I, Output = WithRawText<char
 		't' => true,
 		_ => false,
 	})
-	.map(|c| match c {
-		'"' => '"',
-		'\\' => '\\',
-		'/' => '/',
-		'b' => '\u{0008}',
-		'f' => '\u{000C}',
-		'n' => '\n',
-		'r' => '\r',
-		't' => '\t',
-		_ => unreachable!(),
-	});
+	.map(|raw| {
+		let decoded = match raw {
+			'"' => '"',
+			'\\' => '\\',
+			'/' => '/',
+			'b' => '\u{0008}',
+			'f' => '\u{000C}',
+			'n' => '\n',
+			'r' => '\r',
+			't' => '\t',
+			_ => unreachable!(),
+		};
 
-	let esc = chr::char('\\')
-		.and(tmp)
-		.map(|(a, b)| WithRawText::new(b, format!("\\{a}")));
+		WithRawText::new(decoded, raw.to_string())
+	});
 
 	let unicode =
 		cmb::parser::repeat::count_min_max::<String, I, _>(4, 4, chr::hex_digit()).map(|str| {
@@ -59,10 +59,13 @@ fn escape<I: Stream<Token = char>>() -> impl Parser<I, Output = WithRawText<char
 			WithRawText::new(std::char::from_u32(code_point).unwrap(), str)
 		});
 
-	let unicode = (chr::string::<I>(r#"\u"#), unicode)
-		.map(|(a, b)| WithRawText::new(*b.value(), format!("{a}{}", b.raw_text())));
+	let unicode = chr::char::<I>('u')
+		.and(unicode)
+		.map(|(p, u)| WithRawText::new(*u.value(), format!("{p}{}", u.raw_text())));
 
-	esc.or(unicode)
+	chr::char::<I>('\\')
+		.and(tmp.or(unicode))
+		.map(|(b, v)| WithRawText::new(*v.value(), format!("{b}{}", v.raw_text())))
 }
 
 fn unescaped<I: Stream<Token = char>>() -> impl Parser<I, Output = char> {
