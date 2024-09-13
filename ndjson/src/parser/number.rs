@@ -175,6 +175,16 @@ mod tests {
 			assert!(parser.parse(input).is_err());
 		}
 
+		assert_i("1", 1);
+		assert_i("2", 2);
+		assert_i("3", 3);
+		assert_i("4", 4);
+		assert_i("5", 5);
+		assert_i("6", 6);
+		assert_i("7", 7);
+		assert_i("8", 8);
+		assert_i("9", 9);
+
 		assert_f("1.0", 1.0);
 		assert_f(
 			&add_ws(&std::f64::consts::PI.to_string()),
