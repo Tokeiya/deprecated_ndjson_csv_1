@@ -20,7 +20,6 @@ impl Eq for StringValue {}
 #[cfg(test)]
 mod test {
 	use super::*;
-	use std::hash::DefaultHasher;
 
 	#[test]
 	fn eq() {

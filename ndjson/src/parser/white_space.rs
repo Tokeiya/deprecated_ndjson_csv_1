@@ -1,6 +1,4 @@
-use super::trimmed_output::TrimmedOutput;
 use combine as cmb;
-use combine::parser::char as chr;
 use combine::{Parser, Stream};
 
 pub fn is_ws(c: &char) -> bool {
@@ -20,9 +18,8 @@ pub fn ws<I: Stream<Token = char>>() -> impl Parser<I, Output = String> {
 
 #[cfg(test)]
 mod test {
-	use super::super::trimmed_output::test_helper::{assert, WS};
+	use super::super::trimmed_output::test_helper::WS;
 	use super::*;
-	use combine::parser::char as chr;
 
 	#[test]
 	fn ws() {
