@@ -2,8 +2,25 @@ use combine::{self as cmb, Stream, Parser};
 use combine::parser::char as chr;
 use super::super::elements::value::Value as ElemValue;
 use super::super::elements::array_value::ArrayValue;
-
+use super::white_space::ws;
+use super::value::value as value_parser;
 pub fn array<I: Stream<Token=char>>() -> impl Parser<I, Output=ElemValue> {
+	let begin = (ws(), chr::char::<I>('['), ws()).map(|(l, b, r)| {
+		let mut buff = String::new();
+		buff.push_str(&l);
+		buff.push(b);
+		buff.push_str(&r);
+		buff
+	});
+
+	let end = (chr::char::<I>(']'), ws()).map(|(b, l)| {
+		let mut buff = String::new();
+		buff.push(b);
+		buff.push_str(&l);
+		buff
+	});
+
+
 	chr::char('a').map(|_| todo!())
 }
 

@@ -27,6 +27,10 @@ impl ArrayValue {
 	pub fn end(&self) -> &str {
 		&self.end
 	}
+
+	pub fn raw_string(&self) -> String {
+		todo!()
+	}
 }
 
 #[cfg(test)]
@@ -37,6 +41,30 @@ mod tests {
 	use super::*;
 	use crate::elements::null_value::NullValue;
 	use crate::elements::value::{BooleanValue, Value};
+
+	#[test]
+	fn raw_string() {
+		let mut vec = Vec::<Value>::new();
+
+		vec.push(Value::String(StringValue::new(
+			"hello world".to_string(),
+			r#""hello world""#.to_string(),
+		)));
+		vec.push(Value::Boolean(BooleanValue::new(true, "true".to_string())));
+		vec.push(Value::Null(NullValue::from("null")));
+		vec.push(Value::Number(from_i128(42, "42".to_string())));
+
+		let fixture = ArrayValue::new(
+			vec,
+			"     [         ".to_string(),
+			"    ]      ".to_string(),
+		);
+
+		println!("{}", fixture.raw_string());
+
+		todo!()
+	}
+
 	#[test]
 	fn new() {
 		let mut vec = Vec::<Value>::new();

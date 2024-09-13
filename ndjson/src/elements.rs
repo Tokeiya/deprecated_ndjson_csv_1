@@ -7,6 +7,7 @@ pub mod parse_number_error;
 pub mod string_value;
 pub mod value;
 pub mod with_raw_text;
+mod key_value;
 
 pub use array_value::ArrayValue;
 pub use null_value::NullValue;

@@ -32,6 +32,20 @@ impl ObjectValue {
 	pub fn end(&self) -> &str {
 		&self.end
 	}
+
+	pub fn raw_string(&self) -> String {
+		todo!()
+		// let mut buff = String::new();
+		// 
+		// buff.push_str(&self.begin);
+		// 
+		// 
+		// for (k, v) in self.content() {
+		// 	buff.push_str(&k.raw_text());
+		// 	buff.push(':');
+		// 	buff.push_str(&v.ra)
+		// }
+	}
 }
 
 #[cfg(test)]
@@ -44,6 +58,34 @@ mod test {
 	use super::super::value::Value;
 	use super::*;
 	use std::collections::HashMap;
+
+	#[test]
+	fn raw_string() {
+		let mut map = HashMap::new();
+		map.insert(
+			StringValue::new("num".to_string(), r#""num""#.to_string()),
+			ObjectValueElement::from(Value::from(from_i128(42, "42".to_string()))),
+		);
+		map.insert(
+			StringValue::new("null".to_string(), r#"null"#.to_string()),
+			ObjectValueElement::from(Value::from(NullValue::from("null"))),
+		);
+
+		let mut arr = Vec::new();
+		arr.push(Value::Number(from_i128(42, "42".to_string())));
+		arr.push(Value::Null(NullValue::from("null")));
+
+		map.insert(
+			StringValue::new("multi".to_string(), r#"multi"#.to_string()),
+			ObjectValueElement::from(arr),
+		);
+
+		let fixture = ObjectValue::new(map, "{".to_string(), "}".to_string());
+
+		println!("{}", fixture.raw_string());
+
+		todo!()
+	}
 
 	#[test]
 	fn new() {

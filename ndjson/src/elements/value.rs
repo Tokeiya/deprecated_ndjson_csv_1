@@ -16,6 +16,19 @@ pub enum Value {
 	Object(ObjectValue),
 }
 
+impl Value {
+	pub fn raw_string(&self) -> String {
+		match self {
+			Value::Boolean(b) => b.raw_text().to_string(),
+			Value::Null(n) => n.raw_text().to_string(),
+			Value::String(s) => s.raw_text().to_string(),
+			Value::Number(n) => n.raw_text().to_string(),
+			Value::Array(arr) => arr.raw_string(),
+			Value::Object(obj) => obj.raw_string()
+		}
+	}
+}
+
 impl From<BooleanValue> for Value {
 	fn from(value: BooleanValue) -> Self {
 		Value::Boolean(value)
@@ -59,6 +72,7 @@ pub mod test_helper {
 	pub fn add_spaces(target: &str) -> String {
 		format!("\t \r  \t \n   {target}   \r\n")
 	}
+
 
 	impl Value {
 		pub fn extract_bool(&self) -> &BooleanValue {
@@ -110,6 +124,51 @@ mod tests {
 	use crate::elements::number_value::Number;
 	use crate::elements::object_value_element::ObjectValueElement;
 	use std::collections::HashMap;
+
+
+	#[test]
+	fn raw_string() {
+		let value = Value::from(NullValue::from("null"));
+		assert_eq!(value.raw_string(), "null");
+
+		let value = Value::from(BooleanValue::new(true, "true".to_string()));
+		assert_eq!(value.raw_string(), "true");
+
+		let value = Value::from(StringValue::new("hello world".to_string(), r#""hello world""#.to_string()));
+		assert_eq!(value.raw_string(), r#""hello world""#);
+
+		let value = Value::from(NumberValue::new(Ok(Number::from(42)), "42".to_string()));
+		assert_eq!(value.raw_string(), "42");
+
+		let mut map = HashMap::new();
+		map.insert(
+			StringValue::new("num".to_string(), r#""num""#.to_string()),
+			ObjectValueElement::from(Value::from(NumberValue::new(Ok(Number::from(42)), "42".to_string()))),
+		);
+		map.insert(
+			StringValue::new("null".to_string(), r#"null"#.to_string()),
+			ObjectValueElement::from(Value::from(NullValue::from("null"))),
+		);
+		let value = Value::from(ObjectValue::new(map, "{".to_string(), "}".to_string()));
+		assert_eq!(value.raw_string(), r#"{"num":42,"null":null}"#);
+
+		let mut array = Vec::<Value>::new();
+		array.push(Value::from(BooleanValue::new(true, "true".to_string())));
+		array.push(Value::from(StringValue::new(
+			"hello".to_string(),
+			"\"hello\"".to_string(),
+		)));
+		array.push(Value::from(NumberValue::new(
+			Result::Ok(Number::from(42.195)),
+			"42.195".to_string(),
+		)));
+
+		array.push(Value::Null(NullValue::from("null")));
+
+		let value = Value::from(ArrayValue::new(array, "[".to_string(), "]".to_string()));
+		assert_eq!(value.raw_string(), r#"[true,"hello",42.195,null]"#);
+	}
+
 	#[test]
 	fn bool() {
 		let value = Value::from(BooleanValue::new(true, "   true    ".to_string()));
