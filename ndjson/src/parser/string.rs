@@ -98,7 +98,7 @@ pub fn string<I: Stream<Token = char>>() -> impl Parser<I, Output = Value> {
 			raw_buff.push(rq);
 			raw_buff.push_str(&r);
 
-			Value::from(StringValue::from(raw_buff))
+			Value::from(StringValue::new(v.value().to_string(), raw_buff))
 		})
 }
 
@@ -158,7 +158,11 @@ mod test {
 		assert_value(parser.parse(r#""\u0023""#), "#", r#""\u0023""#);
 		assert_value(parser.parse(r#""\u005B""#), "[", r#""\u005B""#);
 		assert_value(parser.parse(r#""\u005D""#), "]", r#""\u005D""#);
-		assert_value(parser.parse(r#""\u10FFFF""#), "\u{10FFFF}", r#""\u10FFFF""#);
+		assert_value(
+			parser.parse("\"\u{10FFFF}\""),
+			"\u{10FFFF}",
+			"\"\u{10FFFF}\"",
+		);
 
 		//ws
 		let input = add_ws(r#""\u0061""#);
@@ -221,7 +225,7 @@ mod test {
 		let mut parser = super::string::<&str>();
 		assert_value(parser.parse(&input), "]", &input);
 
-		let input = add_ws(r#""\u10FFFF""#);
+		let input = add_ws("\"\u{10FFFF}\"");
 		let mut parser = super::string::<&str>();
 		assert_value(parser.parse(&input), "\u{10FFFF}", &input);
 

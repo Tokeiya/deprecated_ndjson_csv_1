@@ -41,7 +41,10 @@ mod tests {
 	fn new() {
 		let mut vec = Vec::<Value>::new();
 
-		vec.push(Value::String(StringValue::from("hello world")));
+		vec.push(Value::String(StringValue::new(
+			"hello world".to_string(),
+			r#""hello world""#.to_string(),
+		)));
 		vec.push(Value::Boolean(BooleanValue::new(true, "true".to_string())));
 		vec.push(Value::Null(NullValue::from("null")));
 		vec.push(Value::Number(from_i128(42, "42".to_string())));
@@ -66,7 +69,10 @@ mod tests {
 	fn contents() {
 		let mut vec = Vec::<Value>::new();
 
-		vec.push(Value::String(StringValue::from("hello world")));
+		vec.push(Value::String(StringValue::new(
+			"hello world".to_string(),
+			r#""hwllo world""#.to_string(),
+		)));
 		vec.push(Value::Boolean(BooleanValue::new(true, "true".to_string())));
 		vec.push(Value::Null(NullValue::from("null")));
 		vec.push(Value::Number(from_i128(42, "42".to_string())));

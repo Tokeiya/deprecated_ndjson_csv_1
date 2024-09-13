@@ -1,30 +1,7 @@
+use super::with_raw_text::WithRawText;
 use std::hash::{Hash, Hasher};
-pub struct StringValue(String);
-
-impl From<String> for StringValue {
-	fn from(value: String) -> Self {
-		StringValue(value)
-	}
-}
-
-impl From<&str> for StringValue {
-	fn from(value: &str) -> Self {
-		StringValue(value.to_string())
-	}
-}
-
-impl StringValue {
-	pub fn value(&self) -> &str {
-		self.0.trim().trim_matches('"')
-	}
-
-	pub fn raw_text(&self) -> &str {
-		&self.0
-	}
-	pub fn as_key(&self) -> &str {
-		self.0.trim().trim_matches('"')
-	}
-}
+//pub struct StringValue(String);
+pub type StringValue = WithRawText<String>;
 
 impl Hash for StringValue {
 	fn hash<H: Hasher>(&self, state: &mut H) {
@@ -34,7 +11,7 @@ impl Hash for StringValue {
 
 impl PartialEq<Self> for StringValue {
 	fn eq(&self, other: &Self) -> bool {
-		self.as_key() == other.as_key()
+		self.value() == other.value()
 	}
 }
 
@@ -46,49 +23,9 @@ mod test {
 	use std::hash::DefaultHasher;
 
 	#[test]
-	fn from_string() {
-		let fixture = StringValue::from(r#""Hello, World!""#.to_string());
-		assert_eq!(fixture.value(), r#"Hello, World!"#);
-	}
-	#[test]
-	fn from_str() {
-		let fixture = StringValue::from(r#""Hello, World!""#);
-		assert_eq!(fixture.value(), r#"Hello, World!"#);
-	}
-
-	#[test]
-	fn value() {
-		let fixture = StringValue::from("   \n   \"hello world!\"    \t   \r     ");
-		assert_eq!(fixture.value(), "hello world!")
-	}
-	#[test]
-	fn hash() {
-		let fixture = StringValue::from("   \n   \"hello world!\"    \t   \r     ");
-		let mut hasher = DefaultHasher::new();
-
-		fixture.hash(&mut hasher);
-
-		let mut expected = DefaultHasher::new();
-		"hello world!".hash(&mut expected);
-		assert_eq!(hasher.finish(), expected.finish())
-	}
-
-	#[test]
-	fn raw_text() {
-		let fixture = StringValue::from(r#"       "key   "           "#);
-		assert_eq!(fixture.raw_text(), &fixture.0)
-	}
-
-	#[test]
-	fn as_key() {
-		let fixture = StringValue::from(r#"       "key   "           "#);
-		assert_eq!(fixture.as_key(), r#"key   "#);
-	}
-
-	#[test]
 	fn eq() {
-		let a = StringValue::from(r#"     "key"        "#);
-		let b = StringValue::from(r#""key""#);
+		let a = StringValue::new("key".to_string(), r#"     "key"        "#.to_string());
+		let b = StringValue::new("key".to_string(), r#""key""#.to_string());
 		assert!(a == b)
 	}
 }

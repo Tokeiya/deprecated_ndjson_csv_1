@@ -129,7 +129,10 @@ mod tests {
 
 	#[test]
 	fn string() {
-		let value = Value::from(StringValue::from("   \"hello\"    ".to_string()));
+		let value = Value::from(StringValue::new(
+			"hello".to_string(),
+			"   \"hello\"    ".to_string(),
+		));
 
 		assert_eq!(value.extract_string().value(), "hello");
 	}
@@ -152,7 +155,10 @@ mod tests {
 	fn array() {
 		let mut array = Vec::<Value>::new();
 		array.push(Value::from(BooleanValue::new(true, "true".to_string())));
-		array.push(Value::from(StringValue::from("\"hello\"")));
+		array.push(Value::from(StringValue::new(
+			"hello".to_string(),
+			"\"hello\"".to_string(),
+		)));
 		array.push(Value::from(NumberValue::new(
 			Result::Ok(Number::from(42.195)),
 			"42.195".to_string(),
@@ -179,11 +185,14 @@ mod tests {
 	fn object() {
 		let mut map = HashMap::new();
 		map.insert(
-			StringValue::from(r#""foo""#),
-			ObjectValueElement::from(Value::from(StringValue::from(r#""hello world""#))),
+			StringValue::new("foo".to_string(), r#""foo""#.to_string()),
+			ObjectValueElement::from(Value::from(StringValue::new(
+				"hello world".to_string(),
+				r#""hello world""#.to_string(),
+			))),
 		);
 		map.insert(
-			StringValue::from(r#""bar""#),
+			StringValue::new("bar".to_string(), r#""bar""#.to_string()),
 			ObjectValueElement::from(Value::from(NullValue::from("null"))),
 		);
 
