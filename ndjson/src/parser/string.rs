@@ -48,11 +48,25 @@ fn escape<I: Stream<Token = char>>() -> impl Parser<I, Output = WithRawText<char
 }
 
 fn unescaped<I: Stream<Token = char>>() -> impl Parser<I, Output = char> {
-	chr::char::<I>('a').map(|_| todo!())
+	// unescaped = %x20-21 / %x23-5B / %x5D-10FFFF
+	cmb::satisfy::<I, _>(|c| {
+		let i = c as u32;
+
+		if i >= 0x20 && i <= 0x21 {
+			true
+		} else if i >= 0x23 && i <= 0x5B {
+			true
+		} else if i >= 0x5D && i <= 0x10FFFF {
+			true
+		} else {
+			false
+		}
+	})
 }
 
 fn character<I: Stream<Token = char>>() -> impl Parser<I, Output = WithRawText<char>> {
-	chr::char('a').map(|_| todo!())
+	let tmp = unescaped().map(|c| WithRawText::new(c, c.to_string()));
+	tmp.or(escape())
 }
 
 pub fn string<I: Stream<Token = char>>() -> impl Parser<I, Output = Value> {
@@ -242,5 +256,17 @@ mod test {
 		let input = '\u{10FFFF}'.to_string();
 		let mut parser = super::unescaped::<&str>();
 		assert_char(parser.parse(&input), '\u{10FFFF}');
+
+		let input = '\u{19}'.to_string();
+		let mut parser = super::unescaped::<&str>();
+		assert!(parser.parse(&input).is_err());
+
+		let input = '\u{22}'.to_string();
+		let mut parser = super::unescaped::<&str>();
+		assert!(parser.parse(&input).is_err());
+
+		let input = '\u{5C}'.to_string();
+		let mut parser = super::unescaped::<&str>();
+		assert!(parser.parse(&input).is_err());
 	}
 }
