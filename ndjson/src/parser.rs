@@ -4,3 +4,6 @@ mod number;
 mod string;
 mod trimmed_output;
 mod white_space;
+mod value;
+mod array;
+mod object;
