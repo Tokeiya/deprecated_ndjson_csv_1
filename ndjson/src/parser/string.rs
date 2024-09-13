@@ -1,4 +1,6 @@
+use super::super::elements::string_value::StringValue;
 use super::super::elements::with_raw_text::WithRawText;
+use super::white_space::ws;
 use crate::elements::Value;
 use combine as cmb;
 use combine::parser::char as chr;
@@ -70,7 +72,34 @@ fn character<I: Stream<Token = char>>() -> impl Parser<I, Output = WithRawText<c
 }
 
 pub fn string<I: Stream<Token = char>>() -> impl Parser<I, Output = Value> {
-	chr::char('a').map(|_| todo!())
+	let tmp = cmb::many::<Vec<WithRawText<char>>, I, _>(character()).map(|chars| {
+		let mut buff = String::new();
+		let mut raw_buff = String::new();
+
+		for elem in chars {
+			buff.push(*elem.value());
+			raw_buff.push_str(elem.raw_text())
+		}
+
+		WithRawText::new(buff.to_string(), raw_buff.to_string())
+	});
+
+	(
+		ws::<I>(),
+		chr::char::<I>('"'),
+		tmp,
+		chr::char::<I>('"'),
+		ws::<I>(),
+	)
+		.map(|(l, lq, v, rq, r)| {
+			let mut raw_buff = l;
+			raw_buff.push(lq);
+			raw_buff.push_str(v.raw_text());
+			raw_buff.push(rq);
+			raw_buff.push_str(&r);
+
+			Value::from(StringValue::from(raw_buff))
+		})
 }
 
 #[cfg(test)]
