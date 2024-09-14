@@ -1,22 +1,157 @@
 use super::super::elements::value::Value as ElemValue;
 use combine::parser::char as chr;
-use combine::{self as cmb, Parser, Stream};
-pub fn value<I: Stream<Token=char>>() -> impl Parser<I, Output=ElemValue> {
-	chr::char('a').map(|_| todo!())
+use combine::{self as cmb, parser, Parser, Stream};
+use super::boolean_parser::boolean;
+use super::null::null;
+use super::number::number;
+use super::object::object;
+use super::string::string;
+use super::array::array;
+
+fn value_<I: Stream<Token=char>>() -> impl Parser<I, Output=ElemValue> {
+	let bool = boolean();
+	let null = null();
+	let obj = object();
+	let arr = array();
+	let num = number();
+	let str = string();
+
+	bool.or(null).or(obj).or(arr).or(num).or(str)
 }
+
+
+pub mod macro_expand {
+	use super::*;
+	#[allow(non_camel_case_types)]
+	#[doc(hidden)]
+	pub struct value<Input>
+	where
+		<Input as ::combine::stream::StreamOnce>::Error: ::combine::error::ParseError<
+			<Input as ::combine::stream::StreamOnce>::Token,
+			<Input as ::combine::stream::StreamOnce>::Range,
+			<Input as ::combine::stream::StreamOnce>::Position,
+		>,
+		Input: Stream,
+		Input: Stream<Token=char>,
+	{
+		__marker: ::combine::lib::marker::PhantomData<fn(Input) -> ElemValue>,
+	}
+	#[allow(non_shorthand_field_patterns)]
+	impl<Input> ::combine::Parser<Input> for value<Input>
+	where
+		<Input as ::combine::stream::StreamOnce>::Error: ::combine::error::ParseError<
+			<Input as ::combine::stream::StreamOnce>::Token,
+			<Input as ::combine::stream::StreamOnce>::Range,
+			<Input as ::combine::stream::StreamOnce>::Position,
+		>,
+		Input: ::combine::stream::Stream,
+		Input: Stream<Token=char>,
+	{
+		type Output = ElemValue;
+		type PartialState = ();
+		#[inline]
+		fn parse_partial(
+			&mut self,
+			input: &mut Input,
+			state: &mut Self::PartialState,
+		) -> ::combine::error::ParseResult<
+			Self::Output,
+			<Input as ::combine::StreamOnce>::Error,
+		> {
+			self.parse_mode(::combine::parser::PartialMode::default(), input, state)
+		}
+		#[inline]
+		fn parse_first(
+			&mut self,
+			input: &mut Input,
+			state: &mut Self::PartialState,
+		) -> ::combine::error::ParseResult<
+			Self::Output,
+			<Input as ::combine::StreamOnce>::Error,
+		> {
+			self.parse_mode(::combine::parser::FirstMode, input, state)
+		}
+		#[inline]
+		fn parse_mode_impl<M>(
+			&mut self,
+			mode: M,
+			input: &mut Input,
+			state: &mut Self::PartialState,
+		) -> ::combine::error::ParseResult<
+			ElemValue,
+			<Input as ::combine::stream::StreamOnce>::Error,
+		>
+		where
+			M: ::combine::parser::ParseMode,
+		{
+			let value { .. } = *self;
+			{
+				let _ = state;
+				let mut state = Default::default();
+				let state = &mut state;
+				{ value_() }.parse_mode(mode, input, state)
+			}
+		}
+		#[inline]
+		fn add_error(
+			&mut self,
+			errors: &mut ::combine::error::Tracked<
+				<Input as ::combine::stream::StreamOnce>::Error,
+			>,
+		) {
+			let value { .. } = *self;
+			let mut parser = { value_() };
+			{
+				let _: &mut dyn ::combine::Parser<
+					Input,
+					Output=ElemValue,
+					PartialState=_,
+				> = &mut parser;
+			}
+			parser.add_error(errors)
+		}
+		fn add_committed_expected_error(
+			&mut self,
+			errors: &mut ::combine::error::Tracked<
+				<Input as ::combine::stream::StreamOnce>::Error,
+			>,
+		) {
+			let value { .. } = *self;
+			let mut parser = { value_() };
+			{
+				let _: &mut dyn ::combine::Parser<
+					Input,
+					Output=ElemValue,
+					PartialState=_,
+				> = &mut parser;
+			}
+			parser.add_committed_expected_error(errors)
+		}
+	}
+	#[inline]
+	pub fn value<Input>() -> value<Input>
+	where
+		<Input as ::combine::stream::StreamOnce>::Error: ::combine::error::ParseError<
+			<Input as ::combine::stream::StreamOnce>::Token,
+			<Input as ::combine::stream::StreamOnce>::Range,
+			<Input as ::combine::stream::StreamOnce>::Position,
+		>,
+		Input: ::combine::stream::Stream,
+		Input: Stream<Token=char>,
+	{
+		value {
+			__marker: ::combine::lib::marker::PhantomData,
+		}
+	}
+}
+
 
 #[cfg(test)]
 mod test {
 	use super::*;
+	use super::macro_expand::value;
+	use combine;
 	use crate::elements::number_value::test_helper::{is_float, is_integer};
-	use crate::elements::StringValue;
-
-	#[test]
-	fn bool() {
-		let mut parser = value::<&str>();
-		let (b, _) = parser.parse("true").unwrap();
-		assert!(b.extract_bool().value())
-	}
 
 	#[test]
 	fn null() {

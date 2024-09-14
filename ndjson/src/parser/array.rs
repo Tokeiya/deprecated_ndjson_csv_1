@@ -3,25 +3,55 @@ use combine::parser::char as chr;
 use super::super::elements::value::Value as ElemValue;
 use super::super::elements::array_value::ArrayValue;
 use super::white_space::ws;
-use super::value::value as value_parser;
-pub fn array<I: Stream<Token=char>>() -> impl Parser<I, Output=ElemValue> {
-	let begin = (ws(), chr::char::<I>('['), ws()).map(|(l, b, r)| {
+use super::value::macro_expand::value as value_parser;
+
+fn begin<I: Stream<Token=char>>() -> impl Parser<I, Output=String> {
+	(ws(), chr::char::<I>('['), ws()).map(|(l, b, r)| {
 		let mut buff = String::new();
 		buff.push_str(&l);
 		buff.push(b);
 		buff.push_str(&r);
 		buff
-	});
+	})
+}
 
-	let end = (chr::char::<I>(']'), ws()).map(|(b, l)| {
+fn end<I: Stream<Token=char>>() -> impl Parser<I, Output=String> {
+	(chr::char::<I>(']'), ws()).map(|(b, r)| {
 		let mut buff = String::new();
 		buff.push(b);
-		buff.push_str(&l);
+		buff.push_str(&r);
 		buff
+	})
+}
+
+
+pub fn array<I: Stream<Token=char>>() -> impl Parser<I, Output=ElemValue> {
+	let opt_val = cmb::optional(value_parser::<I>());
+
+	let elem = (chr::char::<I>(','), value_parser::<I>()).map(|(_, v)| {
+		v
 	});
 
 
-	chr::char('a').map(|_| todo!())
+	let following = cmb::many::<Vec<ElemValue>, I, _>(elem);
+
+	let vec = (opt_val, following).map(|(e, f)| {
+		let mut vec = Vec::<ElemValue>::new();
+
+		if let Some(x) = e {
+			vec.push(x)
+		}
+
+		for elem in f.into_iter() {
+			vec.push(elem)
+		}
+
+		vec
+	});
+
+	(begin(), vec, end()).map(|(b, v, e)| {
+		ElemValue::from(ArrayValue::new(v, b, e))
+	})
 }
 
 
