@@ -11,7 +11,7 @@ pub fn is_ws(c: &char) -> bool {
 	}
 }
 
-pub fn ws<I: Stream<Token = char>>() -> impl Parser<I, Output = String> {
+pub fn ws<I: Stream<Token=char>>() -> impl Parser<I, Output=String> {
 	let tmp = cmb::satisfy::<I, _>(|c| is_ws(&c));
 	cmb::many::<String, I, _>(tmp)
 }
