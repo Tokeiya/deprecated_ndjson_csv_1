@@ -1,19 +1,21 @@
 use super::super::elements::value::Value as ElemValue;
-use combine::parser::char as chr;
-use combine::{self as cmb, Parser, Stream};
-use crate::parser::white_space::ws;
-use super::value::macro_expand::value as value_parser;
 use super::string::string;
+use super::value::macro_expand::value as value_parser;
 use crate::elements::key_value::KeyValue;
 use crate::elements::ObjectValue;
-fn member<I: Stream<Token=char>>() -> impl Parser<I, Output=KeyValue> {
+use crate::parser::white_space::ws;
+use combine::parser::char as chr;
+use combine::{self as cmb, Parser, Stream};
+fn member<I: Stream<Token = char>>() -> impl Parser<I, Output = KeyValue> {
 	(string::<I>(), chr::char(':'), value_parser::<I>()).map(|(k, _, v)| {
-		let ElemValue::String(s) = k else { unreachable!() };
+		let ElemValue::String(s) = k else {
+			unreachable!()
+		};
 		KeyValue::new(s, v)
 	})
 }
 
-pub fn object<I: Stream<Token=char>>() -> impl Parser<I, Output=ElemValue> {
+pub fn object<I: Stream<Token = char>>() -> impl Parser<I, Output = ElemValue> {
 	let begin = (ws::<I>(), chr::char::<I>('{'), ws::<I>()).map(|(l, b, r)| {
 		let mut buff = String::new();
 		buff.push_str(&l);
@@ -30,28 +32,27 @@ pub fn object<I: Stream<Token=char>>() -> impl Parser<I, Output=ElemValue> {
 		buff
 	});
 
-	let tmp = (chr::char::<I>(','), member()).map(|(_, v)| {
-		v
-	});
+	let tmp = (chr::char::<I>(','), member()).map(|(_, v)| v);
 
+	let contents = (
+		cmb::optional(member::<I>()),
+		cmb::many::<Vec<KeyValue>, I, _>(tmp),
+	)
+		.map(|(o, v)| {
+			let mut vec = Vec::new();
 
-	let contents = (cmb::optional(member::<I>()), cmb::many::<Vec<KeyValue>, I, _>(tmp)).map(|(o, v)| {
-		let mut vec = Vec::new();
+			if let Some(x) = o {
+				vec.push(x)
+			}
 
-		if let Some(x) = o {
-			vec.push(x)
-		}
+			for elem in v.into_iter() {
+				vec.push(elem)
+			}
 
-		for elem in v.into_iter() {
-			vec.push(elem)
-		}
+			vec
+		});
 
-		vec
-	});
-
-	(begin, contents, end).map(|(b, c, e)| {
-		ElemValue::from(ObjectValue::new(c, b, e))
-	})
+	(begin, contents, end).map(|(b, c, e)| ElemValue::from(ObjectValue::new(c, b, e)))
 }
 
 #[cfg(test)]
@@ -59,7 +60,6 @@ mod test {
 	use super::super::trimmed_output::test_helper::WS;
 	use super::*;
 	use crate::elements::number_value::test_helper::is_integer;
-
 
 	#[test]
 	fn empty() {
@@ -70,7 +70,6 @@ mod test {
 		let (obj, rem) = parser.parse(&input).unwrap();
 
 		assert_eq!(rem, "");
-
 
 		let obj = obj.extract_object();
 		println!("end:{}", obj.end());
@@ -108,7 +107,9 @@ mod test {
 	fn many() {
 		let mut parser = object::<&str>();
 
-		let (act, rem) = parser.parse(r#"{"key1":42,"key2":true,"key3":"value"}"#).unwrap();
+		let (act, rem) = parser
+			.parse(r#"{"key1":42,"key2":true,"key3":"value"}"#)
+			.unwrap();
 		assert_eq!("", rem);
 
 		let obj = act.extract_object();
@@ -118,7 +119,6 @@ mod test {
 
 		let obj = obj.content();
 		assert_eq!(obj.len(), 3);
-
 
 		let act = &obj[0];
 		assert_eq!("key1", act.key().value());

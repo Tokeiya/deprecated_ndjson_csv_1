@@ -1,11 +1,11 @@
-use combine::{self as cmb, Stream, Parser};
-use combine::parser::char as chr;
-use super::super::elements::value::Value as ElemValue;
 use super::super::elements::array_value::ArrayValue;
-use super::white_space::ws;
+use super::super::elements::value::Value as ElemValue;
 use super::value::macro_expand::value as value_parser;
+use super::white_space::ws;
+use combine::parser::char as chr;
+use combine::{self as cmb, Parser, Stream};
 
-fn begin<I: Stream<Token=char>>() -> impl Parser<I, Output=String> {
+fn begin<I: Stream<Token = char>>() -> impl Parser<I, Output = String> {
 	(ws(), chr::char::<I>('['), ws()).map(|(l, b, r)| {
 		let mut buff = String::new();
 		buff.push_str(&l);
@@ -15,7 +15,7 @@ fn begin<I: Stream<Token=char>>() -> impl Parser<I, Output=String> {
 	})
 }
 
-fn end<I: Stream<Token=char>>() -> impl Parser<I, Output=String> {
+fn end<I: Stream<Token = char>>() -> impl Parser<I, Output = String> {
 	(chr::char::<I>(']'), ws()).map(|(b, r)| {
 		let mut buff = String::new();
 		buff.push(b);
@@ -24,14 +24,10 @@ fn end<I: Stream<Token=char>>() -> impl Parser<I, Output=String> {
 	})
 }
 
-
-pub fn array<I: Stream<Token=char>>() -> impl Parser<I, Output=ElemValue> {
+pub fn array<I: Stream<Token = char>>() -> impl Parser<I, Output = ElemValue> {
 	let opt_val = cmb::optional(value_parser::<I>());
 
-	let elem = (chr::char::<I>(','), value_parser::<I>()).map(|(_, v)| {
-		v
-	});
-
+	let elem = (chr::char::<I>(','), value_parser::<I>()).map(|(_, v)| v);
 
 	let following = cmb::many::<Vec<ElemValue>, I, _>(elem);
 
@@ -49,17 +45,14 @@ pub fn array<I: Stream<Token=char>>() -> impl Parser<I, Output=ElemValue> {
 		vec
 	});
 
-	(begin(), vec, end()).map(|(b, v, e)| {
-		ElemValue::from(ArrayValue::new(v, b, e))
-	})
+	(begin(), vec, end()).map(|(b, v, e)| ElemValue::from(ArrayValue::new(v, b, e)))
 }
-
 
 #[cfg(test)]
 mod test {
-	use super::*;
+	use super::super::super::elements::number_value::test_helper::is_integer;
 	use super::super::trimmed_output::test_helper::{add_ws, WS};
-	use super::super::super::elements::number_value::test_helper::{is_integer};
+	use super::*;
 	#[test]
 	fn empty() {
 		let input = format!("{}[{}]{}", WS.as_str(), WS.as_str(), WS.as_str());

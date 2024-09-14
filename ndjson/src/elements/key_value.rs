@@ -39,7 +39,14 @@ mod test {
 
 		let fixture = KeyValue::new(key, value);
 
-		assert_eq!(fixture.raw_string(), format!("{}:{}", fixture.key().raw_text(), fixture.value().raw_string()))
+		assert_eq!(
+			fixture.raw_string(),
+			format!(
+				"{}:{}",
+				fixture.key().raw_text(),
+				fixture.value().raw_string()
+			)
+		)
 	}
 
 	#[test]
