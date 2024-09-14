@@ -1,9 +1,9 @@
+mod array;
 mod boolean_parser;
 mod null;
 mod number;
-mod string;
-mod trimmed_output;
-mod white_space;
-mod value;
-mod array;
 mod object;
+mod string;
+pub mod trimmed_output;
+mod value;
+mod white_space;
