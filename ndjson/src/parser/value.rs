@@ -131,7 +131,6 @@ mod test {
 	use super::macro_expand::value;
 	use super::*;
 	use crate::elements::number_value::test_helper::{is_float, is_integer};
-	use combine;
 
 	#[test]
 	fn null() {

@@ -139,22 +139,7 @@ mod tests {
 		let value = Value::from(NumberValue::new(Ok(Number::from(42)), "42".to_string()));
 		assert_eq!(value.raw_string(), "42");
 
-		todo!();
-		// let mut map = HashMap::new();
-		// map.insert(
-		// 	StringValue::new("num".to_string(), r#""num""#.to_string()),
-		// 	ObjectValueElement::from(Value::from(NumberValue::new(
-		// 		Ok(Number::from(42)),
-		// 		"42".to_string(),
-		// 	))),
-		// );
-		// map.insert(
-		// 	StringValue::new("null".to_string(), r#"null"#.to_string()),
-		// 	ObjectValueElement::from(Value::from(NullValue::from("null"))),
-		// );
-		// let value = Value::from(ObjectValue::new(map, "{".to_string(), "}".to_string()));
-		// assert_eq!(value.raw_string(), r#"{"num":42,"null":null}"#);
-		//
+		
 		let mut array = Vec::<Value>::new();
 		array.push(Value::from(BooleanValue::new(true, "true".to_string())));
 		array.push(Value::from(StringValue::new(

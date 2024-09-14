@@ -29,7 +29,15 @@ impl ArrayValue {
 	}
 
 	pub fn raw_string(&self) -> String {
-		todo!()
+		let mut buff = self.begin.to_string();
+
+		for elem in self.content.iter() {
+			buff.push_str(&elem.raw_string());
+			buff.push(',')
+		}
+
+		buff.push_str(self.end.as_str());
+		buff
 	}
 }
 
@@ -60,9 +68,9 @@ mod tests {
 			"    ]      ".to_string(),
 		);
 
-		println!("{}", fixture.raw_string());
+		println!("raw:{:?}", fixture.raw_string());
 
-		todo!()
+		assert_eq!(fixture.raw_string(), "     [         \"hello world\",true,null,42,    ]      ");
 	}
 
 	#[test]
