@@ -121,8 +121,6 @@ mod tests {
 	use super::Value;
 	use super::*;
 	use crate::elements::number_value::Number;
-	use crate::elements::object_value_element::ObjectValueElement;
-	use std::collections::HashMap;
 
 	#[test]
 	fn raw_string() {

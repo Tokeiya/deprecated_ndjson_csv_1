@@ -5,10 +5,9 @@ use super::null::null;
 use super::number::number;
 use super::object::object;
 use super::string::string;
-use combine::parser::char as chr;
-use combine::{self as cmb, parser, Parser, Stream};
+use combine::{Parser, Stream};
 
-fn value_<I: Stream<Token = char>>() -> impl Parser<I, Output = ElemValue> {
+fn value_<I: Stream<Token=char>>() -> impl Parser<I, Output=ElemValue> {
 	let bool = boolean();
 	let null = null();
 	let obj = object();
@@ -31,7 +30,7 @@ pub mod macro_expand {
 			<Input as ::combine::stream::StreamOnce>::Position,
 		>,
 		Input: Stream,
-		Input: Stream<Token = char>,
+		Input: Stream<Token=char>,
 	{
 		__marker: ::combine::lib::marker::PhantomData<fn(Input) -> ElemValue>,
 	}
@@ -44,7 +43,7 @@ pub mod macro_expand {
 			<Input as ::combine::stream::StreamOnce>::Position,
 		>,
 		Input: ::combine::stream::Stream,
-		Input: Stream<Token = char>,
+		Input: Stream<Token=char>,
 	{
 		type Output = ElemValue;
 		type PartialState = ();
@@ -92,7 +91,7 @@ pub mod macro_expand {
 			let value { .. } = *self;
 			let mut parser = { value_() };
 			{
-				let _: &mut dyn ::combine::Parser<Input, Output = ElemValue, PartialState = _> =
+				let _: &mut dyn ::combine::Parser<Input, Output=ElemValue, PartialState=_> =
 					&mut parser;
 			}
 			parser.add_error(errors)
@@ -104,7 +103,7 @@ pub mod macro_expand {
 			let value { .. } = *self;
 			let mut parser = { value_() };
 			{
-				let _: &mut dyn ::combine::Parser<Input, Output = ElemValue, PartialState = _> =
+				let _: &mut dyn ::combine::Parser<Input, Output=ElemValue, PartialState=_> =
 					&mut parser;
 			}
 			parser.add_committed_expected_error(errors)
@@ -119,7 +118,7 @@ pub mod macro_expand {
 			<Input as ::combine::stream::StreamOnce>::Position,
 		>,
 		Input: ::combine::stream::Stream,
-		Input: Stream<Token = char>,
+		Input: Stream<Token=char>,
 	{
 		value {
 			__marker: ::combine::lib::marker::PhantomData,

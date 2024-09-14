@@ -1,7 +1,5 @@
 use super::key_value::KeyValue;
-use crate::elements::object_value_element::ObjectValueElement;
 use crate::elements::value::StringValue;
-use std::collections::HashMap;
 pub struct ObjectValue {
 	content: Vec<KeyValue>,
 	begin: String,
@@ -47,13 +45,11 @@ mod test {
 	use super::super::null_value::NullValue;
 	use super::super::number_value::from_i128;
 	use super::super::number_value::test_helper as num_helper;
-	use super::super::object_value_element::ObjectValueElement;
 	use super::super::value::BooleanValue;
 	use super::super::value::StringValue;
 	use super::super::value::Value;
 	use super::*;
 	use crate::parser::trimmed_output::test_helper::add_ws;
-	use std::collections::HashMap;
 	#[test]
 	fn raw_string() {
 		let mut content = Vec::<KeyValue>::new();
