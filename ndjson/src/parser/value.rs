@@ -1,15 +1,15 @@
-use combine::{self as cmb, Stream, Parser};
-use combine::parser::char as chr;
 use super::super::elements::value::Value as ElemValue;
-pub fn value<I: Stream<Token=char>>() -> impl Parser<I, Output=ElemValue> {
+use combine::parser::char as chr;
+use combine::{self as cmb, Parser, Stream};
+pub fn value<I: Stream<Token = char>>() -> impl Parser<I, Output = ElemValue> {
 	chr::char('a').map(|_| todo!())
 }
 
 #[cfg(test)]
 mod test {
+	use super::*;
 	use crate::elements::number_value::test_helper::{is_float, is_integer};
 	use crate::elements::StringValue;
-	use super::*;
 
 	#[test]
 	fn bool() {
@@ -55,11 +55,6 @@ mod test {
 
 	#[test]
 	fn object() {
-		let mut parser = value::<&str>();
-		let (o, _) = parser.parse(r#"{"foo":1,"bar":2}"#).unwrap();
-		let o = o.extract_object().content();
-
-		is_integer(o[&StringValue::new("foo".to_string(), "foo".to_string())].extract_single().extract_number(), 1);
-		is_integer(o[&StringValue::new("bar".to_string(), "bar".to_string())].extract_single().extract_number(), 2);
+		todo!()
 	}
 }

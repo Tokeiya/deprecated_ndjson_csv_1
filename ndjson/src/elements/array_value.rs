@@ -37,7 +37,7 @@ impl ArrayValue {
 mod tests {
 	use super::super::number_value::from_i128;
 	use super::super::number_value::test_helper as num;
-	use super::super::string_value::StringValue;
+	use super::super::value::StringValue;
 	use super::*;
 	use crate::elements::null_value::NullValue;
 	use crate::elements::value::{BooleanValue, Value};
