@@ -2,6 +2,9 @@
 /.venv
 /.idea
 
+/artifact
+!/artifact/.gitkeep
+
 
 coverage_prof/*
 !/coveage_prof/.gitkeep
