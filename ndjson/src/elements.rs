@@ -1,5 +1,5 @@
 pub mod array_value;
-mod key_value;
+pub mod key_value;
 pub mod null_value;
 pub mod number_value;
 pub mod object_value;

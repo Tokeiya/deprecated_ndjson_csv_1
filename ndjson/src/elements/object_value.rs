@@ -30,7 +30,15 @@ impl ObjectValue {
 	}
 
 	pub fn raw_string(&self) -> String {
-		todo!()
+		let mut buff = self.begin.to_string();
+
+		for elem in self.content.iter() {
+			buff.push_str(&elem.raw_string())
+		}
+
+		buff.push_str(self.end());
+
+		buff
 	}
 }
 
@@ -64,9 +72,23 @@ mod test {
 		));
 
 		let fixture = ObjectValue::new(content, add_ws("{"), add_ws("}"));
-		println!("{}", fixture.raw_string());
+		println!("{:?}", fixture.raw_string());
 
-		todo!()
+		let mut buff = add_ws("{");
+		buff.push_str(&add_ws(r#""foo""#));
+		buff.push(':');
+		buff.push_str("null");
+
+		buff.push_str(&add_ws(r#""bar""#));
+		buff.push(':');
+		buff.push_str(&"true");
+
+		buff.push_str(&add_ws(r#""hoge""#));
+		buff.push(':');
+		buff.push_str(&"42");
+		buff.push_str(&add_ws("}"));
+
+		assert_eq!(fixture.raw_string(), buff);
 	}
 
 	#[test]
@@ -78,17 +100,17 @@ mod test {
 		));
 		content.push(KeyValue::new(
 			StringValue::new("bar".to_string(), add_ws(r#""bar""#)),
-			Value::from(BooleanValue::new(true, "true".to_string())),
+			Value::from(BooleanValue::new(true, add_ws("true"))),
 		));
 
 		content.push(KeyValue::new(
 			StringValue::new("hoge".to_string(), add_ws(r#""hoge""#)),
-			Value::from(from_i128(42, "42".to_string())),
+			Value::from(from_i128(42, add_ws("42"))),
 		));
 
 		let fixture = ObjectValue::new(content, add_ws("{"), add_ws("}"));
 
-		assert_eq!(&fixture.end, &add_ws("{"));
+		assert_eq!(&fixture.begin, &add_ws("{"));
 		assert_eq!(&fixture.end, &add_ws("}"));
 		assert_eq!(fixture.content.len(), 3);
 
@@ -122,8 +144,6 @@ mod test {
 
 		let fixture = ObjectValue::new(content, add_ws("{"), add_ws("}"));
 
-		assert_eq!(&fixture.end, &add_ws("{"));
-		assert_eq!(&fixture.end, &add_ws("}"));
 		assert_eq!(fixture.content.len(), 3);
 
 		assert_eq!(fixture.content()[0].key().value(), "foo");

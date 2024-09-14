@@ -1,7 +1,7 @@
 use super::super::elements::value::Value as ElemValue;
 use combine::parser::char as chr;
 use combine::{self as cmb, Parser, Stream};
-pub fn value<I: Stream<Token = char>>() -> impl Parser<I, Output = ElemValue> {
+pub fn value<I: Stream<Token=char>>() -> impl Parser<I, Output=ElemValue> {
 	chr::char('a').map(|_| todo!())
 }
 
@@ -55,6 +55,15 @@ mod test {
 
 	#[test]
 	fn object() {
-		todo!()
+		let mut parser = value::<&str>();
+		let (o, _) = parser.parse(r#"{"key":42}"#).unwrap();
+		let o = o.extract_object().content();
+
+		assert_eq!(o.len(), 1);
+		assert_eq!(o[0].key().value(), "key");
+		assert_eq!(o[0].key().raw_text(), r#""key""#);
+
+		is_integer(o[0].value().extract_number(), 42);
+		assert_eq!(o[0].value().extract_number().raw_text(), "42");
 	}
 }
