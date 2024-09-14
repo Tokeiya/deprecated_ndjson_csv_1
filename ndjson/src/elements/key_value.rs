@@ -12,24 +12,36 @@ impl KeyValue {
 	}
 
 	pub fn key(&self) -> &StringValue {
-		todo!()
+		&self.key
 	}
 
 	pub fn value(&self) -> &Value {
-		todo!()
+		&self.value
 	}
 
 	pub fn raw_string(&self) -> String {
-		todo!()
+		format!("{}:{}", self.key.raw_text(), self.value.raw_string())
 	}
 }
 
 #[cfg(test)]
 mod test {
-	use super::super::number_value::{test_helper as num_helper, Number, NumberValue};
 	use super::super::value::StringValue;
-	use super::super::value::{test_helper as value_helper, BooleanValue, Value};
+	use super::super::value::Value;
 	use super::*;
+	use crate::elements::number_value::from_i128;
+	use crate::parser::trimmed_output::test_helper::add_ws;
+
+	#[test]
+	fn raw_string() {
+		let key = StringValue::new("key".to_string(), add_ws(r#""key""#));
+		let value = Value::from(from_i128(42, add_ws("42")));
+
+		let fixture = KeyValue::new(key, value);
+
+		assert_eq!(fixture.raw_string(), format!("{}:{}", fixture.key().raw_text(), fixture.value().raw_string()))
+	}
+
 	#[test]
 	fn new() {
 		let fixture = KeyValue::new(
