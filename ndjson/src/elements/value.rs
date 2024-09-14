@@ -3,8 +3,8 @@ use crate::elements::array_value::ArrayValue;
 use crate::elements::null_value::NullValue;
 use crate::elements::number_value::NumberValue;
 use crate::elements::object_value::ObjectValue;
-use crate::elements::string_value::StringValue;
 
+pub type StringValue = WithRawText<String>;
 pub type BooleanValue = WithRawText<bool>;
 
 pub enum Value {
@@ -24,7 +24,7 @@ impl Value {
 			Value::String(s) => s.raw_text().to_string(),
 			Value::Number(n) => n.raw_text().to_string(),
 			Value::Array(arr) => arr.raw_string(),
-			Value::Object(obj) => obj.raw_string()
+			Value::Object(obj) => obj.raw_string(),
 		}
 	}
 }
@@ -72,7 +72,6 @@ pub mod test_helper {
 	pub fn add_spaces(target: &str) -> String {
 		format!("\t \r  \t \n   {target}   \r\n")
 	}
-
 
 	impl Value {
 		pub fn extract_bool(&self) -> &BooleanValue {
@@ -125,7 +124,6 @@ mod tests {
 	use crate::elements::object_value_element::ObjectValueElement;
 	use std::collections::HashMap;
 
-
 	#[test]
 	fn raw_string() {
 		let value = Value::from(NullValue::from("null"));
@@ -134,7 +132,10 @@ mod tests {
 		let value = Value::from(BooleanValue::new(true, "true".to_string()));
 		assert_eq!(value.raw_string(), "true");
 
-		let value = Value::from(StringValue::new("hello world".to_string(), r#""hello world""#.to_string()));
+		let value = Value::from(StringValue::new(
+			"hello world".to_string(),
+			r#""hello world""#.to_string(),
+		));
 		assert_eq!(value.raw_string(), r#""hello world""#);
 
 		let value = Value::from(NumberValue::new(Ok(Number::from(42)), "42".to_string()));
@@ -143,7 +144,10 @@ mod tests {
 		let mut map = HashMap::new();
 		map.insert(
 			StringValue::new("num".to_string(), r#""num""#.to_string()),
-			ObjectValueElement::from(Value::from(NumberValue::new(Ok(Number::from(42)), "42".to_string()))),
+			ObjectValueElement::from(Value::from(NumberValue::new(
+				Ok(Number::from(42)),
+				"42".to_string(),
+			))),
 		);
 		map.insert(
 			StringValue::new("null".to_string(), r#"null"#.to_string()),

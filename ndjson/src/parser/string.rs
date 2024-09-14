@@ -1,4 +1,4 @@
-use super::super::elements::string_value::StringValue;
+use super::super::elements::value::StringValue;
 use super::super::elements::with_raw_text::WithRawText;
 use super::white_space::ws;
 use crate::elements::Value;
