@@ -16,4 +16,3 @@ pub mod test_helper {
 		_ = file.write_all(text.as_bytes()).unwrap();
 	}
 }
-

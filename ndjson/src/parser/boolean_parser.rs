@@ -2,7 +2,7 @@ use super::white_space::ws;
 use crate::elements::{BooleanValue, Value};
 use combine::parser::char as chr;
 use combine::{Parser, Stream};
-pub fn boolean<I: Stream<Token=char>>() -> impl Parser<I, Output=Value> {
+pub fn boolean<I: Stream<Token = char>>() -> impl Parser<I, Output = Value> {
 	let t = chr::string::<I>("true").map(|_| (true, "true"));
 
 	let f = chr::string::<I>("false").map(|_| (false, "false"));

@@ -11,7 +11,7 @@ enum Output {
 	String(String),
 }
 
-fn int_string_parser<I: Stream<Token=char>>() -> impl Parser<I, Output=String> {
+fn int_string_parser<I: Stream<Token = char>>() -> impl Parser<I, Output = String> {
 	let zero = chr::char::<I>('0')
 		.skip(cmb::not_followed_by(chr::digit()))
 		.map(|c| c.to_string());
@@ -28,7 +28,7 @@ fn int_string_parser<I: Stream<Token=char>>() -> impl Parser<I, Output=String> {
 		'9' => true,
 		_ => false,
 	})
-		.map(|c| Output::Char(c));
+	.map(|c| Output::Char(c));
 
 	let digits = cmb::many::<String, I, _>(chr::digit()).map(|s| Output::String(s));
 
@@ -55,7 +55,7 @@ fn int_string_parser<I: Stream<Token=char>>() -> impl Parser<I, Output=String> {
 	signed
 }
 
-pub fn number<I: Stream<Token=char>>() -> impl Parser<I, Output=Value> {
+pub fn number<I: Stream<Token = char>>() -> impl Parser<I, Output = Value> {
 	let integer = int_string_parser::<I>();
 
 	let frac = (

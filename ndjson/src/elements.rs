@@ -5,9 +5,9 @@ pub mod number_value;
 pub mod object_value;
 pub mod object_value_element;
 pub mod parse_number_error;
+mod text_expression;
 pub mod value;
 pub mod with_raw_text;
-mod text_expression;
 
 pub use array_value::ArrayValue;
 pub use null_value::NullValue;
