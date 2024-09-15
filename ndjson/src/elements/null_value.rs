@@ -1,3 +1,5 @@
+use super::text_expression::TextExpression;
+
 pub struct NullValue(String);
 
 impl From<&str> for NullValue {
@@ -12,16 +14,25 @@ impl From<String> for NullValue {
 	}
 }
 
-impl NullValue {
-	pub fn raw_text(&self) -> &str {
-		&self.0
+impl TextExpression for NullValue {
+	fn build_raw_text(&self, buff: &mut String) {
+		buff.push_str(&self.0)
 	}
 }
 
 #[cfg(test)]
 mod tests {
 	use super::*;
+	use crate::elements::text_expression::test_helper::assert_text_expression;
 	use crate::elements::value::test_helper::add_spaces;
+	use crate::parser::trimmed_output::test_helper::add_ws;
+	#[test]
+	fn text_expression() {
+		let expected = add_ws("null");
+		let act = NullValue::from(expected.as_str());
+
+		assert_text_expression(&act, expected.as_str())
+	}
 
 	#[test]
 	fn from_str() {

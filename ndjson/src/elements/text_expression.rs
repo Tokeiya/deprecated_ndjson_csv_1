@@ -20,7 +20,7 @@ pub mod test_helper {
 		_ = file.write_all(text.as_bytes()).unwrap();
 	}
 
-	pub fn assert_text_expression<T: TextExpression>(actual: &dyn TextExpression, expected: &str) {
+	pub fn assert_text_expression(actual: &dyn TextExpression, expected: &str) {
 		let mut buff = String::new();
 
 		actual.build_raw_text(&mut buff);
