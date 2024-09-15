@@ -1,5 +1,9 @@
 pub trait TextExpression {
-	fn raw_text(&self) -> String;
+	fn raw_text(&self) -> String {
+		let mut buff = String::new();
+		self.build_raw_text(&mut buff);
+		buff
+	}
 	fn build_raw_text(&self, buff: &mut String);
 }
 
@@ -14,5 +18,24 @@ pub mod test_helper {
 		let mut file = File::create(&path).unwrap();
 
 		_ = file.write_all(text.as_bytes()).unwrap();
+	}
+}
+
+#[cfg(test)]
+mod tests {
+	use super::*;
+
+	struct Dummy;
+
+	impl TextExpression for Dummy {
+		fn build_raw_text(&self, buff: &mut String) {
+			buff.push_str("hello");
+		}
+	}
+
+	#[test]
+	fn raw_text() {
+		let mock = Dummy;
+		assert_eq!(mock.raw_text(), "hello");
 	}
 }
