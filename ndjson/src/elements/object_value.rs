@@ -50,22 +50,26 @@ mod test {
 	use super::super::value::Value;
 	use super::*;
 	use crate::parser::trimmed_output::test_helper::add_ws;
+
+	fn context() -> Vec<KeyValue> {
+		vec![
+			KeyValue::new(
+				StringValue::new("foo".to_string(), add_ws(r#""foo""#)),
+				Value::from(NullValue::from("null")),
+			),
+			KeyValue::new(
+				StringValue::new("bar".to_string(), add_ws(r#""bar""#)),
+				Value::from(BooleanValue::new(true, "true".to_string())),
+			),
+			KeyValue::new(
+				StringValue::new("hoge".to_string(), add_ws(r#""hoge""#)),
+				Value::from(from_i128(42, "42".to_string())),
+			),
+		]
+	}
 	#[test]
 	fn raw_string() {
-		let mut content = Vec::<KeyValue>::new();
-		content.push(KeyValue::new(
-			StringValue::new("foo".to_string(), add_ws(r#""foo""#)),
-			Value::from(NullValue::from("null")),
-		));
-		content.push(KeyValue::new(
-			StringValue::new("bar".to_string(), add_ws(r#""bar""#)),
-			Value::from(BooleanValue::new(true, "true".to_string())),
-		));
-
-		content.push(KeyValue::new(
-			StringValue::new("hoge".to_string(), add_ws(r#""hoge""#)),
-			Value::from(from_i128(42, "42".to_string())),
-		));
+		let content = context();
 
 		let fixture = ObjectValue::new(content, add_ws("{"), add_ws("}"));
 		println!("{:?}", fixture.raw_string());
@@ -89,20 +93,7 @@ mod test {
 
 	#[test]
 	fn new() {
-		let mut content = Vec::<KeyValue>::new();
-		content.push(KeyValue::new(
-			StringValue::new("foo".to_string(), add_ws(r#""foo""#)),
-			Value::from(NullValue::from("null")),
-		));
-		content.push(KeyValue::new(
-			StringValue::new("bar".to_string(), add_ws(r#""bar""#)),
-			Value::from(BooleanValue::new(true, add_ws("true"))),
-		));
-
-		content.push(KeyValue::new(
-			StringValue::new("hoge".to_string(), add_ws(r#""hoge""#)),
-			Value::from(from_i128(42, add_ws("42"))),
-		));
+		let content = context();
 
 		let fixture = ObjectValue::new(content, add_ws("{"), add_ws("}"));
 
@@ -123,20 +114,7 @@ mod test {
 
 	#[test]
 	fn content() {
-		let mut content = Vec::<KeyValue>::new();
-		content.push(KeyValue::new(
-			StringValue::new("foo".to_string(), add_ws(r#""foo""#)),
-			Value::from(NullValue::from("null")),
-		));
-		content.push(KeyValue::new(
-			StringValue::new("bar".to_string(), add_ws(r#""bar""#)),
-			Value::from(BooleanValue::new(true, "true".to_string())),
-		));
-
-		content.push(KeyValue::new(
-			StringValue::new("hoge".to_string(), add_ws(r#""hoge""#)),
-			Value::from(from_i128(42, "42".to_string())),
-		));
+		let content = context();
 
 		let fixture = ObjectValue::new(content, add_ws("{"), add_ws("}"));
 
