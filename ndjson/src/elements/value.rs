@@ -126,6 +126,7 @@ mod tests {
 	use crate::elements::key_value::KeyValue;
 	use crate::elements::null_value::NullValue;
 	use crate::elements::number_value::Number;
+	use crate::elements::text_expression::test_helper::assert_text_expression;
 	#[test]
 	fn raw_string() {
 		let value = Value::from(NullValue::from("null"));
@@ -203,25 +204,26 @@ mod tests {
 
 	#[test]
 	fn array() {
-		let mut array = Vec::<Value>::new();
-		array.push(Value::from(BooleanValue::new(true, "true".to_string())));
-		array.push(Value::from(StringValue::new(
-			"hello".to_string(),
-			"\"hello\"".to_string(),
-		)));
-		array.push(Value::from(NumberValue::new(
-			Result::Ok(Number::from(42.195)),
-			"42.195".to_string(),
-		)));
-
-		array.push(Value::Null(NullValue::from("null")));
+		let array = vec![
+			Value::from(BooleanValue::new(true, "true".to_string())),
+			Value::from(StringValue::new(
+				"hello".to_string(),
+				"\"hello\"".to_string(),
+			)),
+			Value::from(NumberValue::new(
+				Result::Ok(Number::from(42.195)),
+				"42.195".to_string(),
+			)),
+			Value::Null(NullValue::from("null")),
+		];
 
 		let fixture = Value::from(ArrayValue::new(array, "[".to_string(), "]".to_string()));
 
 		assert_eq!(fixture.extract_array().contents().len(), 4);
 
 		let piv = fixture.extract_array().contents()[0].extract_bool();
-		piv.assert_raw("true");
+
+		assert_text_expression(piv, "true");
 		assert_eq!(piv.value(), &true);
 
 		let piv = fixture.extract_array().contents()[1].extract_string();
@@ -233,17 +235,16 @@ mod tests {
 
 	#[test]
 	fn object() {
-		let mut vec = Vec::<KeyValue>::new();
-
-		vec.push(KeyValue::new(
-			StringValue::new("key1".to_string(), r#""key1""#.to_string()),
-			Value::from(from_i128(42, "42".to_string())),
-		));
-
-		vec.push(KeyValue::new(
-			StringValue::new("key2".to_string(), r#"key2"#.to_string()),
-			Value::from(NullValue::from("null")),
-		));
+		let vec = vec![
+			KeyValue::new(
+				StringValue::new("key1".to_string(), r#""key1""#.to_string()),
+				Value::from(from_i128(42, "42".to_string())),
+			),
+			KeyValue::new(
+				StringValue::new("key2".to_string(), r#"key2"#.to_string()),
+				Value::from(NullValue::from("null")),
+			),
+		];
 
 		let obj = ObjectValue::new(vec, " { ".to_string(), "}  ".to_string());
 
