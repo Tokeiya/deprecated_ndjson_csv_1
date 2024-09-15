@@ -1,5 +1,7 @@
 use super::key_value::KeyValue;
 //use crate::elements::value::StringValue;
+use super::text_expression::TextExpression;
+
 pub struct ObjectValue {
 	content: Vec<KeyValue>,
 	begin: String,
@@ -40,6 +42,25 @@ impl ObjectValue {
 	}
 }
 
+impl TextExpression for ObjectValue {
+	fn build_raw_text(&self, buff: &mut String) {
+		buff.push_str(&self.begin);
+
+		for elem in self.content.iter() {
+			buff.push_str(elem.key().raw_text());
+			buff.push(':');
+			elem.value().build_raw_text(buff);
+			buff.push(',');
+		}
+
+		if self.content.len() != 0 {
+			buff.pop();
+		}
+
+		buff.push_str(&self.end)
+	}
+}
+
 #[cfg(test)]
 mod test {
 	use super::super::null_value::NullValue;
@@ -50,6 +71,7 @@ mod test {
 	use super::super::value::Value;
 	use super::*;
 	use crate::parser::trimmed_output::test_helper::add_ws;
+	use super::super::text_expression::test_helper::assert_text_expression;
 
 	fn context() -> Vec<KeyValue> {
 		vec![
@@ -78,17 +100,19 @@ mod test {
 		buff.push_str(&add_ws(r#""foo""#));
 		buff.push(':');
 		buff.push_str("null");
+		buff.push(',');
 
 		buff.push_str(&add_ws(r#""bar""#));
 		buff.push(':');
 		buff.push_str(&"true");
+		buff.push(',');
 
 		buff.push_str(&add_ws(r#""hoge""#));
 		buff.push(':');
 		buff.push_str(&"42");
 		buff.push_str(&add_ws("}"));
 
-		assert_eq!(fixture.raw_string(), buff);
+		assert_text_expression(&fixture, &buff);
 	}
 
 	#[test]

@@ -4,7 +4,6 @@ use crate::elements::null_value::NullValue;
 use crate::elements::number_value::NumberValue;
 use crate::elements::object_value::ObjectValue;
 use crate::elements::text_expression::TextExpression;
-
 pub type StringValue = WithRawText<String>;
 pub type BooleanValue = WithRawText<bool>;
 
@@ -63,6 +62,19 @@ impl From<ArrayValue> for Value {
 impl From<ObjectValue> for Value {
 	fn from(value: ObjectValue) -> Self {
 		Value::Object(value)
+	}
+}
+
+impl TextExpression for Value {
+	fn build_raw_text(&self, buff: &mut String) {
+		match self {
+			Value::Boolean(b) => b.build_raw_text(buff),
+			Value::Null(n) => n.build_raw_text(buff),
+			Value::String(s) => s.build_raw_text(buff),
+			Value::Number(n) => n.build_raw_text(buff),
+			Value::Array(a) => a.build_raw_text(buff),
+			Value::Object(o) => o.build_raw_text(buff)
+		}
 	}
 }
 
@@ -158,7 +170,8 @@ mod tests {
 		array.push(Value::Null(NullValue::from("null")));
 
 		let value = Value::from(ArrayValue::new(array, "[".to_string(), "]".to_string()));
-		assert_eq!(value.raw_string(), r#"[true,"hello",42.195,null]"#);
+
+		assert_text_expression(&value, r#"[true,"hello",42.195,null]"#);
 	}
 
 	#[test]
