@@ -54,8 +54,7 @@ mod tests {
 	use crate::elements::null_value::NullValue;
 	use crate::elements::value::{BooleanValue, Value};
 
-	#[test]
-	fn raw_string() {
+	fn gen_vec() -> Vec<Value> {
 		let mut vec = Vec::<Value>::new();
 
 		vec.push(Value::String(StringValue::new(
@@ -66,6 +65,11 @@ mod tests {
 		vec.push(Value::Null(NullValue::from("null")));
 		vec.push(Value::Number(from_i128(42, "42".to_string())));
 
+		vec
+	}
+	#[test]
+	fn raw_string() {
+		let mut vec = gen_vec();
 		let fixture = ArrayValue::new(
 			vec,
 			"     [         ".to_string(),
@@ -82,15 +86,7 @@ mod tests {
 
 	#[test]
 	fn new() {
-		let mut vec = Vec::<Value>::new();
-
-		vec.push(Value::String(StringValue::new(
-			"hello world".to_string(),
-			r#""hello world""#.to_string(),
-		)));
-		vec.push(Value::Boolean(BooleanValue::new(true, "true".to_string())));
-		vec.push(Value::Null(NullValue::from("null")));
-		vec.push(Value::Number(from_i128(42, "42".to_string())));
+		let mut vec = gen_vec();
 
 		let fixture = ArrayValue::new(
 			vec,
