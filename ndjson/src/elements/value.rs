@@ -118,10 +118,13 @@ pub mod test_helper {
 
 #[cfg(test)]
 mod tests {
+	use super::super::number_value::from_i128;
+	use super::super::number_value::test_helper::is_integer;
 	use super::Value;
 	use super::*;
+	use crate::elements::key_value::KeyValue;
+	use crate::elements::null_value::NullValue;
 	use crate::elements::number_value::Number;
-
 	#[test]
 	fn raw_string() {
 		let value = Value::from(NullValue::from("null"));
@@ -139,7 +142,6 @@ mod tests {
 		let value = Value::from(NumberValue::new(Ok(Number::from(42)), "42".to_string()));
 		assert_eq!(value.raw_string(), "42");
 
-		
 		let mut array = Vec::<Value>::new();
 		array.push(Value::from(BooleanValue::new(true, "true".to_string())));
 		array.push(Value::from(StringValue::new(
@@ -230,6 +232,32 @@ mod tests {
 
 	#[test]
 	fn object() {
-		todo!()
+		let mut vec = Vec::<KeyValue>::new();
+
+		vec.push(KeyValue::new(
+			StringValue::new("key1".to_string(), r#""key1""#.to_string()),
+			Value::from(from_i128(42, "42".to_string())),
+		));
+
+		vec.push(KeyValue::new(
+			StringValue::new("key2".to_string(), r#"key2"#.to_string()),
+			Value::from(NullValue::from("null")),
+		));
+
+		let obj = ObjectValue::new(vec, " { ".to_string(), "}  ".to_string());
+
+		let value = Value::from(obj);
+
+		let fixture = value.extract_object();
+		assert_eq!(fixture.begin(), " { ");
+		assert_eq!(fixture.end(), "}  ");
+
+		assert_eq!(fixture.content().len(), 2);
+
+		assert_eq!(fixture.content()[0].key().value(), "key1");
+		is_integer(fixture.content()[0].value().extract_number(), 42);
+
+		assert_eq!(fixture.content()[1].key().value(), "key2");
+		_ = fixture.content()[1].value().extract_null();
 	}
 }

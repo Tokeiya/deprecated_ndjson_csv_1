@@ -36,6 +36,10 @@ impl ArrayValue {
 			buff.push(',')
 		}
 
+		if self.content.len() != 0 {
+			buff.pop();
+		}
+
 		buff.push_str(self.end.as_str());
 		buff
 	}
@@ -70,7 +74,10 @@ mod tests {
 
 		println!("raw:{:?}", fixture.raw_string());
 
-		assert_eq!(fixture.raw_string(), "     [         \"hello world\",true,null,42,    ]      ");
+		assert_eq!(
+			fixture.raw_string(),
+			"     [         \"hello world\",true,null,42    ]      "
+		);
 	}
 
 	#[test]
