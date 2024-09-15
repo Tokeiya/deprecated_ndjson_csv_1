@@ -33,7 +33,7 @@ impl ObjectValue {
 		let mut buff = self.begin.to_string();
 
 		for elem in self.content.iter() {
-			buff.push_str(&elem.raw_string())
+			elem.build_raw_text(&mut buff);
 		}
 
 		buff.push_str(self.end());

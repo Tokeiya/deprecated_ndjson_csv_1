@@ -19,10 +19,6 @@ impl KeyValue {
 	pub fn value(&self) -> &Value {
 		&self.value
 	}
-
-	pub fn raw_string(&self) -> String {
-		format!("{}:{}", self.key.raw_text(), self.value.raw_string())
-	}
 }
 
 impl TextExpression for KeyValue {
