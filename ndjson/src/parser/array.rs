@@ -27,7 +27,7 @@ fn end<I: Stream<Token=char>>() -> impl Parser<I, Output=String> {
 pub fn array<I: Stream<Token=char>>() -> impl Parser<I, Output=ElemValue> {
 	let opt_val = cmb::optional(value_parser::<I>());
 
-	let elem = (chr::char::<I>(','), value_parser::<I>()).map(|(_, v)| v);
+	let elem = (chr::char::<I>(',').map(|_| println!("hit")), value_parser::<I>()).map(|(_, v)| v);
 
 	let following = cmb::many::<Vec<ElemValue>, I, _>(elem);
 
@@ -70,19 +70,21 @@ mod test {
 	#[test]
 	fn single() {
 		let mut parser = array::<&str>();
-		let (arr, rem) = parser.parse("[1]").unwrap();
+		let (arr, rem) = parser.parse("[           1     , 2     ]").unwrap();
 
 		assert_eq!(rem, "");
 		let arr = arr.extract_array();
 
 		let a = arr.contents()[0].extract_number();
 		is_integer(a, 1);
+
+		println!("{:?}", arr.contents()[0].raw_string())
 	}
 
 	#[test]
 	fn multi() {
 		let mut parser = array::<&str>();
-		let (arr, rem) = parser.parse(r#"["hello",1,null,true]"#).unwrap();
+		let (arr, rem) = parser.parse(r#"["hello", 1 , null ,true]"#).unwrap();
 
 		assert_eq!("", rem);
 

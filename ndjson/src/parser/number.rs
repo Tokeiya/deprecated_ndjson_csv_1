@@ -186,6 +186,8 @@ mod tests {
 		assert_i("8", 8);
 		assert_i("9", 9);
 
+		assert_i(&add_ws("10"), 10);
+
 		assert_f("1.0", 1.0);
 		assert_f(
 			&add_ws(&std::f64::consts::PI.to_string()),

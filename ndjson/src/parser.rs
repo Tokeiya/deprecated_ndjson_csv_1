@@ -5,7 +5,7 @@ mod number;
 mod object;
 mod string;
 pub mod trimmed_output;
-mod value;
+pub mod value;
 mod white_space;
 
 
