@@ -69,7 +69,7 @@ mod tests {
 	}
 	#[test]
 	fn raw_string() {
-		let mut vec = gen_vec();
+		let vec = gen_vec();
 		let fixture = ArrayValue::new(
 			vec,
 			"     [         ".to_string(),
@@ -86,7 +86,7 @@ mod tests {
 
 	#[test]
 	fn new() {
-		let mut vec = gen_vec();
+		let vec = gen_vec();
 
 		let fixture = ArrayValue::new(
 			vec,
