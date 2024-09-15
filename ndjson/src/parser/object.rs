@@ -6,7 +6,7 @@ use crate::elements::ObjectValue;
 use crate::parser::white_space::ws;
 use combine::parser::char as chr;
 use combine::{self as cmb, Parser, Stream};
-fn member<I: Stream<Token = char>>() -> impl Parser<I, Output = KeyValue> {
+fn member<I: Stream<Token=char>>() -> impl Parser<I, Output=KeyValue> {
 	(string::<I>(), chr::char(':'), value_parser::<I>()).map(|(k, _, v)| {
 		let ElemValue::String(s) = k else {
 			unreachable!()
@@ -15,7 +15,7 @@ fn member<I: Stream<Token = char>>() -> impl Parser<I, Output = KeyValue> {
 	})
 }
 
-pub fn object<I: Stream<Token = char>>() -> impl Parser<I, Output = ElemValue> {
+pub fn object<I: Stream<Token=char>>() -> impl Parser<I, Output=ElemValue> {
 	let begin = (ws::<I>(), chr::char::<I>('{'), ws::<I>()).map(|(l, b, r)| {
 		let mut buff = String::new();
 		buff.push_str(&l);
@@ -60,6 +60,7 @@ mod test {
 	use super::super::trimmed_output::test_helper::WS;
 	use super::*;
 	use crate::elements::number_value::test_helper::is_integer;
+	use crate::elements::text_expression::{TextExpression, test_helper::assert_text_expression};
 
 	#[test]
 	fn empty() {

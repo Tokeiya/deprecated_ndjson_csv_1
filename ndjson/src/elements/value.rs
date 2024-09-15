@@ -19,11 +19,11 @@ pub enum Value {
 impl Value {
 	pub fn raw_string(&self) -> String {
 		match self {
-			Value::Boolean(b) => b.raw_text().to_string(),
+			Value::Boolean(b) => b.raw_text(),
 			Value::Null(n) => n.raw_text().to_string(),
 			Value::String(s) => s.raw_text().to_string(),
 			Value::Number(n) => n.raw_text().to_string(),
-			Value::Array(arr) => arr.raw_string(),
+			Value::Array(arr) => arr.raw_text(),
 			Value::Object(obj) => obj.raw_string(),
 		}
 	}
@@ -73,7 +73,7 @@ impl TextExpression for Value {
 			Value::String(s) => s.build_raw_text(buff),
 			Value::Number(n) => n.build_raw_text(buff),
 			Value::Array(a) => a.build_raw_text(buff),
-			Value::Object(o) => o.build_raw_text(buff)
+			Value::Object(o) => o.build_raw_text(buff),
 		}
 	}
 }

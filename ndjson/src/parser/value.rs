@@ -7,7 +7,7 @@ use super::object::object;
 use super::string::string;
 use combine::{Parser, Stream};
 
-fn value_<I: Stream<Token = char>>() -> impl Parser<I, Output = ElemValue> {
+fn value_<I: Stream<Token=char>>() -> impl Parser<I, Output=ElemValue> {
 	let bool = boolean();
 	let null = null();
 	let obj = object();
@@ -30,7 +30,7 @@ pub mod macro_expand {
 			<Input as ::combine::stream::StreamOnce>::Position,
 		>,
 		Input: Stream,
-		Input: Stream<Token = char>,
+		Input: Stream<Token=char>,
 	{
 		__marker: ::combine::lib::marker::PhantomData<fn(Input) -> ElemValue>,
 	}
@@ -43,7 +43,7 @@ pub mod macro_expand {
 			<Input as ::combine::stream::StreamOnce>::Position,
 		>,
 		Input: ::combine::stream::Stream,
-		Input: Stream<Token = char>,
+		Input: Stream<Token=char>,
 	{
 		type Output = ElemValue;
 		type PartialState = ();
@@ -91,7 +91,7 @@ pub mod macro_expand {
 			let value { .. } = *self;
 			let mut parser = { value_() };
 			{
-				let _: &mut dyn ::combine::Parser<Input, Output = ElemValue, PartialState = _> =
+				let _: &mut dyn ::combine::Parser<Input, Output=ElemValue, PartialState=_> =
 					&mut parser;
 			}
 			parser.add_error(errors)
@@ -103,7 +103,7 @@ pub mod macro_expand {
 			let value { .. } = *self;
 			let mut parser = { value_() };
 			{
-				let _: &mut dyn ::combine::Parser<Input, Output = ElemValue, PartialState = _> =
+				let _: &mut dyn ::combine::Parser<Input, Output=ElemValue, PartialState=_> =
 					&mut parser;
 			}
 			parser.add_committed_expected_error(errors)
@@ -118,7 +118,7 @@ pub mod macro_expand {
 			<Input as ::combine::stream::StreamOnce>::Position,
 		>,
 		Input: ::combine::stream::Stream,
-		Input: Stream<Token = char>,
+		Input: Stream<Token=char>,
 	{
 		value {
 			__marker: ::combine::lib::marker::PhantomData,
@@ -131,6 +131,8 @@ mod test {
 	use super::macro_expand::value;
 	use super::*;
 	use crate::elements::number_value::test_helper::{is_float, is_integer};
+	use crate::elements::text_expression::{TextExpression, test_helper::assert_text_expression};
+
 
 	#[test]
 	fn null() {

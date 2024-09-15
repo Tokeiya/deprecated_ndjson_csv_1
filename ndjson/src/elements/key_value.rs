@@ -1,3 +1,4 @@
+use super::text_expression::TextExpression;
 use super::value::StringValue;
 use super::value::Value;
 
@@ -24,12 +25,21 @@ impl KeyValue {
 	}
 }
 
+impl TextExpression for KeyValue {
+	fn build_raw_text(&self, buff: &mut String) {
+		self.key.build_raw_text(buff);
+		buff.push(':');
+		self.value.build_raw_text(buff)
+	}
+}
+
 #[cfg(test)]
 mod test {
 	use super::super::value::StringValue;
 	use super::super::value::Value;
 	use super::*;
 	use crate::elements::number_value::from_i128;
+	use crate::elements::text_expression::test_helper::assert_text_expression;
 	use crate::parser::trimmed_output::test_helper::add_ws;
 
 	#[test]
@@ -39,14 +49,14 @@ mod test {
 
 		let fixture = KeyValue::new(key, value);
 
-		assert_eq!(
-			fixture.raw_string(),
-			format!(
+		assert_text_expression(
+			&fixture,
+			&format!(
 				"{}:{}",
 				fixture.key().raw_text(),
 				fixture.value().raw_string()
-			)
-		)
+			),
+		);
 	}
 
 	#[test]

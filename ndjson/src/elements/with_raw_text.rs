@@ -12,10 +12,6 @@ impl<T> WithRawText<T> {
 	pub fn value(&self) -> &T {
 		&self.value
 	}
-
-	pub fn raw_text(&self) -> &str {
-		&self.raw_text
-	}
 }
 
 impl<T> TextExpression for WithRawText<T> {

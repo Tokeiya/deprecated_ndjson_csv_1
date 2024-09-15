@@ -5,8 +5,9 @@ use crate::elements::Value;
 use combine as cmb;
 use combine::parser::char as chr;
 use combine::{Parser, Stream};
+use crate::elements::text_expression::TextExpression;
 
-fn escape<I: Stream<Token = char>>() -> impl Parser<I, Output = WithRawText<char>> {
+fn escape<I: Stream<Token=char>>() -> impl Parser<I, Output=WithRawText<char>> {
 	let tmp = cmb::satisfy::<I, _>(|c| match c {
 		'"' => true,
 		'\\' => true,
@@ -18,21 +19,21 @@ fn escape<I: Stream<Token = char>>() -> impl Parser<I, Output = WithRawText<char
 		't' => true,
 		_ => false,
 	})
-	.map(|raw| {
-		let decoded = match raw {
-			'"' => '"',
-			'\\' => '\\',
-			'/' => '/',
-			'b' => '\u{0008}',
-			'f' => '\u{000C}',
-			'n' => '\n',
-			'r' => '\r',
-			't' => '\t',
-			_ => unreachable!(),
-		};
+		.map(|raw| {
+			let decoded = match raw {
+				'"' => '"',
+				'\\' => '\\',
+				'/' => '/',
+				'b' => '\u{0008}',
+				'f' => '\u{000C}',
+				'n' => '\n',
+				'r' => '\r',
+				't' => '\t',
+				_ => unreachable!(),
+			};
 
-		WithRawText::new(decoded, raw.to_string())
-	});
+			WithRawText::new(decoded, raw.to_string())
+		});
 
 	let unicode =
 		cmb::parser::repeat::count_min_max::<String, I, _>(4, 4, chr::hex_digit()).map(|str| {
@@ -49,7 +50,7 @@ fn escape<I: Stream<Token = char>>() -> impl Parser<I, Output = WithRawText<char
 		.map(|(b, v)| WithRawText::new(*v.value(), format!("{b}{}", v.raw_text())))
 }
 
-fn unescaped<I: Stream<Token = char>>() -> impl Parser<I, Output = char> {
+fn unescaped<I: Stream<Token=char>>() -> impl Parser<I, Output=char> {
 	// unescaped = %x20-21 / %x23-5B / %x5D-10FFFF
 	cmb::satisfy::<I, _>(|c| {
 		let i = c as u32;
@@ -66,19 +67,19 @@ fn unescaped<I: Stream<Token = char>>() -> impl Parser<I, Output = char> {
 	})
 }
 
-fn character<I: Stream<Token = char>>() -> impl Parser<I, Output = WithRawText<char>> {
+fn character<I: Stream<Token=char>>() -> impl Parser<I, Output=WithRawText<char>> {
 	let tmp = unescaped().map(|c| WithRawText::new(c, c.to_string()));
 	tmp.or(escape())
 }
 
-pub fn string<I: Stream<Token = char>>() -> impl Parser<I, Output = Value> {
+pub fn string<I: Stream<Token=char>>() -> impl Parser<I, Output=Value> {
 	let tmp = cmb::many::<Vec<WithRawText<char>>, I, _>(character()).map(|chars| {
 		let mut buff = String::new();
 		let mut raw_buff = String::new();
 
 		for elem in chars {
 			buff.push(*elem.value());
-			raw_buff.push_str(elem.raw_text())
+			elem.build_raw_text(&mut raw_buff);
 		}
 
 		WithRawText::new(buff.to_string(), raw_buff.to_string())
@@ -94,7 +95,7 @@ pub fn string<I: Stream<Token = char>>() -> impl Parser<I, Output = Value> {
 		.map(|(l, lq, v, rq, r)| {
 			let mut raw_buff = l;
 			raw_buff.push(lq);
-			raw_buff.push_str(v.raw_text());
+			v.build_raw_text(&mut raw_buff);
 			raw_buff.push(rq);
 			raw_buff.push_str(&r);
 

@@ -47,7 +47,7 @@ impl TextExpression for ObjectValue {
 		buff.push_str(&self.begin);
 
 		for elem in self.content.iter() {
-			buff.push_str(elem.key().raw_text());
+			elem.key().build_raw_text(buff);
 			buff.push(':');
 			elem.value().build_raw_text(buff);
 			buff.push(',');
@@ -66,12 +66,12 @@ mod test {
 	use super::super::null_value::NullValue;
 	use super::super::number_value::from_i128;
 	use super::super::number_value::test_helper as num_helper;
+	use super::super::text_expression::test_helper::assert_text_expression;
 	use super::super::value::BooleanValue;
 	use super::super::value::StringValue;
 	use super::super::value::Value;
 	use super::*;
 	use crate::parser::trimmed_output::test_helper::add_ws;
-	use super::super::text_expression::test_helper::assert_text_expression;
 
 	fn context() -> Vec<KeyValue> {
 		vec![

@@ -1,6 +1,6 @@
+use super::text_expression::TextExpression;
 use super::value::Value;
 use std::vec::Vec;
-use super::text_expression::TextExpression;
 
 pub struct ArrayValue {
 	content: Vec<Value>,
@@ -28,22 +28,6 @@ impl ArrayValue {
 	pub fn end(&self) -> &str {
 		&self.end
 	}
-
-	pub fn raw_string(&self) -> String {
-		let mut buff = self.begin.to_string();
-
-		for elem in self.content.iter() {
-			buff.push_str(&elem.raw_string());
-			buff.push(',')
-		}
-
-		if self.content.len() != 0 {
-			buff.pop();
-		}
-
-		buff.push_str(self.end.as_str());
-		buff
-	}
 }
 
 impl TextExpression for ArrayValue {
@@ -67,11 +51,11 @@ impl TextExpression for ArrayValue {
 mod tests {
 	use super::super::number_value::from_i128;
 	use super::super::number_value::test_helper as num;
+	use super::super::text_expression::test_helper::assert_text_expression;
 	use super::super::value::StringValue;
 	use super::*;
 	use crate::elements::null_value::NullValue;
 	use crate::elements::value::{BooleanValue, Value};
-	use super::super::text_expression::test_helper::assert_text_expression;
 
 	fn gen_vec() -> Vec<Value> {
 		let mut vec = Vec::<Value>::new();
@@ -94,10 +78,11 @@ mod tests {
 			"     [         ".to_string(),
 			"    ]      ".to_string(),
 		);
-
-
-		println!("raw:{:?}", fixture.raw_string());
-		assert_text_expression(&fixture, "     [         \"hello world\",true,null,42    ]      ");
+		
+		assert_text_expression(
+			&fixture,
+			"     [         \"hello world\",true,null,42    ]      ",
+		);
 	}
 
 	#[test]

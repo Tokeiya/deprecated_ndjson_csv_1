@@ -2,7 +2,7 @@ use super::white_space::ws;
 use crate::elements::{BooleanValue, Value};
 use combine::parser::char as chr;
 use combine::{Parser, Stream};
-pub fn boolean<I: Stream<Token = char>>() -> impl Parser<I, Output = Value> {
+pub fn boolean<I: Stream<Token=char>>() -> impl Parser<I, Output=Value> {
 	let t = chr::string::<I>("true").map(|_| (true, "true"));
 
 	let f = chr::string::<I>("false").map(|_| (false, "false"));
@@ -17,6 +17,7 @@ pub fn boolean<I: Stream<Token = char>>() -> impl Parser<I, Output = Value> {
 mod test {
 	use super::super::trimmed_output::test_helper::WS;
 	use super::*;
+	use crate::elements::text_expression::{TextExpression, test_helper::assert_text_expression};
 	#[test]
 	fn bool() {
 		let input = format!("{}true{}", WS.as_str(), WS.as_str());

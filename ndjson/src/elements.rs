@@ -5,7 +5,7 @@ pub mod number_value;
 pub mod object_value;
 pub mod object_value_element;
 pub mod parse_number_error;
-mod text_expression;
+pub mod text_expression;
 pub mod value;
 pub mod with_raw_text;
 
