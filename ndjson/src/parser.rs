@@ -7,3 +7,6 @@ mod string;
 pub mod trimmed_output;
 mod value;
 mod white_space;
+
+
+pub use value::macro_expand::value as value_parser;

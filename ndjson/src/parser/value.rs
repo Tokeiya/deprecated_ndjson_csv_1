@@ -131,7 +131,7 @@ mod test {
 	use super::macro_expand::value;
 	use super::*;
 	use crate::elements::number_value::test_helper::{is_float, is_integer};
-	use crate::elements::text_expression::{TextExpression, test_helper::assert_text_expression};
+	use crate::elements::text_expression::TextExpression;
 
 
 	#[test]

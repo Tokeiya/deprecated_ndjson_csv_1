@@ -142,7 +142,7 @@ pub fn number<I: Stream<Token=char>>() -> impl Parser<I, Output=Value> {
 mod tests {
 	use super::super::trimmed_output::test_helper::add_ws;
 	use super::*;
-	use crate::elements::text_expression::{TextExpression, test_helper::assert_text_expression};
+	use crate::elements::text_expression::TextExpression;
 
 
 	#[test]

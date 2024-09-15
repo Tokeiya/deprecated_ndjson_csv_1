@@ -1,11 +1,11 @@
 use super::super::elements::value::StringValue;
 use super::super::elements::with_raw_text::WithRawText;
 use super::white_space::ws;
+use crate::elements::text_expression::TextExpression;
 use crate::elements::Value;
 use combine as cmb;
 use combine::parser::char as chr;
 use combine::{Parser, Stream};
-use crate::elements::text_expression::TextExpression;
 
 fn escape<I: Stream<Token=char>>() -> impl Parser<I, Output=WithRawText<char>> {
 	let tmp = cmb::satisfy::<I, _>(|c| match c {

@@ -60,7 +60,7 @@ mod test {
 	use super::super::trimmed_output::test_helper::WS;
 	use super::*;
 	use crate::elements::number_value::test_helper::is_integer;
-	use crate::elements::text_expression::{TextExpression, test_helper::assert_text_expression};
+	use crate::elements::text_expression::TextExpression;
 
 	#[test]
 	fn empty() {

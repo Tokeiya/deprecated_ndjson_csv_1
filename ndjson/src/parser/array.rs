@@ -5,7 +5,7 @@ use super::white_space::ws;
 use combine::parser::char as chr;
 use combine::{self as cmb, Parser, Stream};
 
-fn begin<I: Stream<Token = char>>() -> impl Parser<I, Output = String> {
+fn begin<I: Stream<Token=char>>() -> impl Parser<I, Output=String> {
 	(ws(), chr::char::<I>('['), ws()).map(|(l, b, r)| {
 		let mut buff = String::new();
 		buff.push_str(&l);
@@ -15,7 +15,7 @@ fn begin<I: Stream<Token = char>>() -> impl Parser<I, Output = String> {
 	})
 }
 
-fn end<I: Stream<Token = char>>() -> impl Parser<I, Output = String> {
+fn end<I: Stream<Token=char>>() -> impl Parser<I, Output=String> {
 	(chr::char::<I>(']'), ws()).map(|(b, r)| {
 		let mut buff = String::new();
 		buff.push(b);
@@ -24,7 +24,7 @@ fn end<I: Stream<Token = char>>() -> impl Parser<I, Output = String> {
 	})
 }
 
-pub fn array<I: Stream<Token = char>>() -> impl Parser<I, Output = ElemValue> {
+pub fn array<I: Stream<Token=char>>() -> impl Parser<I, Output=ElemValue> {
 	let opt_val = cmb::optional(value_parser::<I>());
 
 	let elem = (chr::char::<I>(','), value_parser::<I>()).map(|(_, v)| v);
